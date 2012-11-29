@@ -1,0 +1,33 @@
+{
+  "name": "seneca-postgres",
+  "version": "0.0.1",
+  "description": "A PostgreSQL database layer for Seneca MVP framework.",
+  "main": "lib/postgres-store.js",
+  "dependencies": {
+    "seneca": "~0.4.2",
+    "pg": "~0.8.7",
+    "underscore": "~1.4.2",
+    "async": "~0.1.22",
+    "node-uuid": "*"
+  },
+  "devDependencies": {
+    "expresso":"*"
+  },
+  "scripts": {
+    "test": "expresso test/postgres.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/darsee/seneca-dynamodb.git"
+  },
+  "keywords": [
+    "seneca",
+    "postgres",
+    "postgresql",
+    "pg",
+    "plugin"
+  ],
+  "author": "Marian Radulescu",
+  "license": "MIT",
+  "readmeFilename": "README.md"
+}
