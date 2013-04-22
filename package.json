@@ -1,5 +1,5 @@
 {
-  "name": "seneca-postgres",
+  "name": "seneca-postgres-store",
   "version": "0.1.0",
   "description": "Seneca data store plugin for PostgreSQL",
   "main": "lib/postgres-store.js",
