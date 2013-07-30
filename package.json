@@ -1,9 +1,10 @@
 {
   "name": "seneca-postgres-store",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Seneca data store plugin for PostgreSQL",
   "main": "lib/postgres-store.js",
   "author": "Marian Radulescu",
+  "contributors": ["Peter Elger <elger.peter@gmail.com> (http://peterelger.com/)"],
   "license": "MIT",
   "readmeFilename": "README.md",
   "repository": {

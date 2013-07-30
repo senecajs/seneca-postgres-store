@@ -1,3 +1,6 @@
+/*jslint node: true*/
+/*jslint asi: true */
+/*global describe:true, it:true*/
 "use strict";
 
 var assert = require('assert')
@@ -9,7 +12,8 @@ var shared = seneca.test.store.shared
 
 var config = {
   log:'print'
-};var si = seneca();
+};
+var si = seneca();
 si.use(require('..'), {
   name: 'senecatest',
   host: '127.0.0.1',
