@@ -7,7 +7,7 @@ seneca-postgres is a [PostgreSQL][postgresqlorg] database plugin for the [Seneca
 Usage:
 
     var seneca = require('seneca');
-    var store = require('seneca-postgres');
+    var store = require('seneca-postgres-store');
 
     var config = {}
     var storeopts = {
