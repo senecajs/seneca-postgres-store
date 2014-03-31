@@ -1,13 +1,13 @@
-seneca-postgres
-===============
+seneca-postgresql-store
+=======================
 
-seneca-postgres is a [PostgreSQL][postgresqlorg] database plugin for the [Seneca][seneca] MVP toolkit. The plugin is using the
+seneca-postgresql-store is a [PostgreSQL][postgresqlorg] database plugin for the [Seneca][seneca] MVP toolkit. The plugin is using the
 [node-postgres][nodepg] driver.
 
 Usage:
 
     var seneca = require('seneca');
-    var store = require('seneca-postgres-store');
+    var store = require('seneca-postgresql-store');
 
     var config = {}
     var storeopts = {
