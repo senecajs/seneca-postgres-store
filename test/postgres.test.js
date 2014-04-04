@@ -37,10 +37,11 @@ describe('postgres', function () {
 
     var product = si.make('foo')
 
+    product.id$ = '12345'
     product.p1 = 'pear'
 
     si.act(
-      { role:'entity', cmd:'save', ent: product, id$:'12345'},
+      { role:'entity', cmd:'save', ent: product},
       function( err, product ) {
         console.log(arguments)
         assert(!err)
