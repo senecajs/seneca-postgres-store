@@ -33,6 +33,22 @@ describe('postgres', function () {
     shared.basictest(si, done)
   })
 
+  it('save with passing an id$', function(done) {
+
+    var product = si.make('foo')
+
+    product.p1 = 'pear'
+
+    si.act(
+      { role:'entity', cmd:'save', ent: product, id$:'12345'},
+      function( err, product ) {
+        console.log(arguments)
+        assert(!err)
+        assert.equal(product.id, '12345')
+        done()
+      })
+  })
+
   it('close', function (done) {
     shared.closetest(si, testcount, done)
   })
