@@ -20,6 +20,7 @@
     "pg"
   ],
   "scripts": {
+    "test": "node_modules/.bin/mocha test --reporter spec"
   },
   "dependencies": {
     "seneca": "0.5.x",
