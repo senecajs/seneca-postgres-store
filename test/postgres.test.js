@@ -7,7 +7,7 @@ var assert = require('assert')
 var seneca = require('seneca')
 var async = require('async')
 
-var shared = seneca.test.store.shared
+var shared = require('seneca-store-test')
 
 
 var config = {
