@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "seneca": "0.5.x",
-    "pg": "0.8.x",
+    "pg": "3.0.3",
     "underscore": "1.4.x",
     "async": "0.1.x",
     "node-uuid": "1.4.x"
