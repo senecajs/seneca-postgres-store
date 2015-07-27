@@ -5,7 +5,10 @@
   "main": "lib/postgresql-store.js",
   "author": "Marian Radulescu",
   "contributors": [
-    "Peter Elger <elger.peter@gmail.com> (http://peterelger.com/)"
+    "Peter Elger <elger.peter@gmail.com> (http://peterelger.com/)",
+    "Nicolas Herment",
+    "Cristian Ianto",
+    "Brian Mullan"
   ],
   "license": "MIT",
   "readmeFilename": "README.md",
