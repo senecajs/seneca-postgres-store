@@ -33,7 +33,6 @@
   },
   "devDependencies": {
     "mocha": "1.9.x",
-    "chai": "1.5.x",
-    "seneca-store-test": "0.1.0"
+    "seneca-store-test": "0.2.2"
   }
 }
