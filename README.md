@@ -1,6 +1,8 @@
 seneca-postgresql-store
 =======================
 
+[![Build Status](https://travis-ci.org/nherment/seneca-postgresql-store.svg)](https://travis-ci.org/nherment/seneca-postgresql-store)
+
 seneca-postgresql-store is a [PostgreSQL][postgresqlorg] database plugin for the [Seneca][seneca] MVP toolkit. The plugin is using the
 [node-postgres][nodepg] driver.
 
