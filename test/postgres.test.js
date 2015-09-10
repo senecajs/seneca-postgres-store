@@ -5,14 +5,15 @@
 
 var assert = require('assert')
 var seneca = require('seneca')
-var async = require('async')
+var Lab = require('lab');
+var lab = exports.lab = Lab.script()
+
+var describe = lab.describe
+var it = lab.it
 
 var shared = require('seneca-store-test')
 
 
-var config = {
-  log:'print'
-};
 var si = seneca();
 si.use(require('..'), {
   name: 'senecatest',
@@ -54,4 +55,3 @@ describe('postgres', function () {
     shared.closetest(si, testcount, done)
   })
 })
-
