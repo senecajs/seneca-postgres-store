@@ -8,7 +8,8 @@
     "Peter Elger <elger.peter@gmail.com> (http://peterelger.com/)",
     "Nicolas Herment",
     "Cristian Ianto",
-    "Brian Mullan"
+    "Brian Mullan",
+    "Michele Capra"
   ],
   "license": "MIT",
   "readmeFilename": "README.md",
@@ -25,17 +26,17 @@
     "pg"
   ],
   "scripts": {
-    "test": "node_modules/.bin/mocha test --reporter spec"
+    "test": "node_modules/.bin/lab test  -r console -v"
   },
   "dependencies": {
-    "seneca": "0.6.1",
-    "pg": "4.4.0",
-    "underscore": "1.4.x",
-    "async": "0.1.x",
-    "node-uuid": "1.4.x"
+    "async": "^0.1.22",
+    "node-uuid": "^1.4.3",
+    "pg": "^4.4.0",
+    "seneca": "^0.6.1",
+    "underscore": "^1.4.4"
   },
   "devDependencies": {
-    "mocha": "1.9.x",
+    "lab": "^5.16.0",
     "seneca-store-test": "0.2.2"
   }
 }
