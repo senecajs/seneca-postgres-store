@@ -29,11 +29,11 @@
     "test": "node_modules/.bin/lab test  -r console -v"
   },
   "dependencies": {
-    "async": "0.1.x",
-    "node-uuid": "1.4.x",
-    "pg": "4.4.0",
-    "seneca": "0.6.1",
-    "underscore": "1.4.x"
+    "async": "^0.1.22",
+    "node-uuid": "^1.4.3",
+    "pg": "^4.4.0",
+    "seneca": "^0.6.1",
+    "underscore": "^1.4.4"
   },
   "devDependencies": {
     "lab": "^5.16.0",
