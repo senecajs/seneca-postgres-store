@@ -38,3 +38,9 @@ Usage:
 ## Limits
 
 By default queries are limited to 20 values. This can be bypassed by passing the `nolimit` option, which if set to true will not limit any queries.
+
+## Fields
+
+To filter the fields returned from the `list` operation, pass a `fields$` array of column names to return. If no `fields$` are passed, all fields are returned (i.e. `select *` is used). e.g.
+
+    query.fields$ = ['id', 'name']
