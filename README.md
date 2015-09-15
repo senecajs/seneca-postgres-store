@@ -17,7 +17,8 @@ Usage:
       host:'127.0.0.1',
       port:5432,
       username:'user',
-      password:'password'
+      password:'password',
+      nolimit: true
     };
 
     ...
@@ -33,3 +34,7 @@ Usage:
 [postgresqlorg]: http://www.postgresql.org/
 [seneca]: http://senecajs.org/
 [nodepg]: https://github.com/brianc/node-postgres
+
+## Limits
+
+By default queries are limited to 20 values. This can be bypassed by passing the `nolimit` option, which if set to true will not limit any queries.
