@@ -27,7 +27,7 @@
     "pg"
   ],
   "scripts": {
-    "test": "node_modules/.bin/lab test  -r console -v"
+    "test": "node_modules/.bin/lab test  -r console -v -L -t 70"
   },
   "dependencies": {
     "node-uuid": "1.4.7",
