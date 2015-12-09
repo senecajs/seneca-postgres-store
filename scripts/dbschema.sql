@@ -14,7 +14,8 @@ CREATE TABLE foo
 (
   id character varying, 
   p1 character varying, 
-  p2 character varying 
+  p2 character varying,
+  p3 character varying
 );
 ALTER TABLE foo OWNER TO senecatest;
 
@@ -27,9 +28,9 @@ CREATE TABLE moon_bar
   wen timestamp with time zone, 
   mark character varying, 
   "dec" real, 
-  arr text, 
-  obj text, 
-  seneca  text 
+  arr integer[],
+  obj json,
+  seneca text
 );
 ALTER TABLE moon_bar OWNER TO senecatest;
 

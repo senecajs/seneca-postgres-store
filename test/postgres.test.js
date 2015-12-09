@@ -5,14 +5,15 @@
 
 var assert = require('assert')
 var seneca = require('seneca')
-var async = require('async')
+var Lab = require('lab');
+var lab = exports.lab = Lab.script()
 
-var shared = seneca.test.store.shared
+var describe = lab.describe
+var it = lab.it
+
+var shared = require('seneca-store-test')
 
 
-var config = {
-  log:'print'
-};
 var si = seneca();
 si.use(require('..'), {
   name: 'senecatest',
@@ -33,8 +34,24 @@ describe('postgres', function () {
     shared.basictest(si, done)
   })
 
+  it('save with passing an id$', function(done) {
+
+    var product = si.make('foo')
+
+    product.id$ = '12345'
+    product.p1 = 'pear'
+
+    si.act(
+      { role:'entity', cmd:'save', ent: product},
+      function( err, product ) {
+        console.log(arguments)
+        assert(!err)
+        assert.equal(product.id, '12345')
+        done()
+      })
+  })
+
   it('close', function (done) {
     shared.closetest(si, testcount, done)
   })
 })
-
