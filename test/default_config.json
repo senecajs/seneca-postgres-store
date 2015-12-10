@@ -1,0 +1,8 @@
+{
+  "name": "senecatest",
+  "host": "pg",
+  "port": 5432,
+  "username": "senecatest",
+  "password": "senecatest",
+  "options": { }
+}

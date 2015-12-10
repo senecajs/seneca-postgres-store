@@ -9,16 +9,10 @@ var describe = lab.describe
 var it = lab.it
 
 var shared = require('seneca-store-test')
+var default_config = require('./default_config.json')
 
 var si = seneca()
-si.use(require('..'), {
-  name: 'senecatest',
-  host: '127.0.0.1',
-  port: 5432,
-  username: 'senecatest',
-  password: 'senecatest',
-  options: { }
-})
+si.use(require('..'), default_config)
 
 describe('Basic Test', function () {
   shared.basictest({
@@ -57,3 +51,4 @@ describe('postgres', function () {
       })
   })
 })
+
