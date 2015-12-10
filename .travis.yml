@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - 0.11
+  - 0.10
+addons:
+  postgresql: "9.4"
+before_script:
+  - psql -U postgres -f scripts/dbschema.sql
