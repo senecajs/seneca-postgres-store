@@ -35,6 +35,11 @@ describe('Basic Test', function () {
     seneca: si,
     script: lab
   })
+
+  shared.sqltest({
+    seneca: si,
+    script: lab
+  })
 })
 
 describe('postgres', function () {
@@ -46,7 +51,6 @@ describe('postgres', function () {
 
     si.act({role: 'entity', cmd: 'save', ent: product},
       function (err, product) {
-        console.log(arguments)
         assert(!err)
         assert.equal(product.id, '12345')
         done()
