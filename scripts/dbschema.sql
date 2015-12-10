@@ -34,3 +34,10 @@ CREATE TABLE moon_bar
 );
 ALTER TABLE moon_bar OWNER TO senecatest;
 
+CREATE TABLE product
+(
+  name character varying,
+  id character varying,
+  price integer
+);
+ALTER TABLE product OWNER TO senecatest;
