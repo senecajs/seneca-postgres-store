@@ -1,0 +1,8 @@
+pg:
+  build: docker
+  expose:
+    - "5432"
+store:
+  build: .
+  links:
+   - pg
