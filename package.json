@@ -1,6 +1,6 @@
 {
   "name": "seneca-postgresql-store",
-  "version": "0.8.0",
+  "version": "0.8.3",
   "description": "Seneca data store plugin for PostgreSQL",
   "main": "lib/postgresql-store.js",
   "author": "Marian Radulescu",
@@ -25,6 +25,12 @@
     "postgres",
     "postgresql",
     "pg"
+  ],
+  "files": [
+    "README.md",
+    "LICENSE.txt",
+    "lib",
+    "package.json"
   ],
   "scripts": {
     "test": "node_modules/.bin/lab test  -r console -v -L -t 70"
