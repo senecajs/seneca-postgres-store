@@ -77,7 +77,7 @@ Starting from version version 0.8.3 list$ supports also these operators:
 - gte$: `.list$({ f1: {gte$: 5} })` for greater than or equal. 
 - gt$: `.list$({ f1: {gt$: 5} })` for greater than. 
 - in$: `.list$({ f1: {in$: [10, 20]} })` for in. in$ operator accepts only values of type array. 
-- nin$: `.list$({ f1: {nin$: ["'v1'", "'v2'"]} })` for not-in. nin$ operator accepts only values of type array. 
+- nin$: `.list$({ f1: {nin$: ['v1', 'v2']} })` for not-in. nin$ operator accepts only values of type array. 
 
 
 Note: you can use `sort$`, `limit$`, `skip$` and `fields$` together.
