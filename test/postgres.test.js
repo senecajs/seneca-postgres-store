@@ -197,7 +197,7 @@ describe('postgres store API V2.0.0', function () {
   it('use in$ string', function (done) {
     var product = si.make('product')
 
-    product.list$({ name: {in$: ["'pear'", "'cherry'"]}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({ name: {in$: ['cherry', 'pear']}, sort$: {price: 1} }, function (err, lst) {
       assert(!err)
 
       assert.equal(2, lst.length)
@@ -261,6 +261,18 @@ describe('postgres store API V2.0.0', function () {
 
       assert.equal(1, lst.length)
       assert.equal('pear', lst[0].name)
+      done()
+    })
+  })
+
+  it('use nin$ string', function (done) {
+    var product = si.make('product')
+
+    product.list$({ name: {nin$: ['cherry', 'pear']}, sort$: {price: 1} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(1, lst.length)
+      assert.equal('apple', lst[0].name)
       done()
     })
   })
