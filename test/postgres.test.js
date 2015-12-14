@@ -94,6 +94,43 @@ describe('postgres store API V2.0.0', function () {
     })
   })
 
+  it('use not equal ne$ string', function (done) {
+    var product = si.make('product')
+
+    product.list$({ name: {ne$: 'pear'}, sort$: {price: 1} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(2, lst.length)
+      assert.equal('apple', lst[0].name)
+      assert.equal('cherry', lst[1].name)
+      done()
+    })
+  })
+
+  it('use eq$', function (done) {
+    var product = si.make('product')
+
+    product.list$({ price: {eq$: 200} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(1, lst.length)
+      assert.equal('pear', lst[0].name)
+      done()
+    })
+  })
+
+  it('use eq$ string', function (done) {
+    var product = si.make('product')
+
+    product.list$({ name: {eq$: 'pear'} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(1, lst.length)
+      assert.equal('pear', lst[0].name)
+      done()
+    })
+  })
+
   it('use gte$', function (done) {
     var product = si.make('product')
 
@@ -136,6 +173,78 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({ price: {lt$: 200}, sort$: {price: 1} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(1, lst.length)
+      assert.equal('apple', lst[0].name)
+      done()
+    })
+  })
+
+  it('use in$', function (done) {
+    var product = si.make('product')
+
+    product.list$({ price: {in$: [200, 300]}, sort$: {price: 1} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(2, lst.length)
+      assert.equal('pear', lst[0].name)
+      assert.equal('cherry', lst[1].name)
+      done()
+    })
+  })
+
+  it('use in$ string', function (done) {
+    var product = si.make('product')
+
+    product.list$({ name: {in$: ["'pear'", "'cherry'"]}, sort$: {price: 1} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(2, lst.length)
+      assert.equal('pear', lst[0].name)
+      assert.equal('cherry', lst[1].name)
+      done()
+    })
+  })
+
+  it('use in$ one matching', function (done) {
+    var product = si.make('product')
+
+    product.list$({ price: {in$: [200, 500, 700]}, sort$: {price: 1} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(1, lst.length)
+      assert.equal('pear', lst[0].name)
+      done()
+    })
+  })
+
+  it('use in$ no matching', function (done) {
+    var product = si.make('product')
+
+    product.list$({ price: {in$: [250, 500, 700]}, sort$: {price: 1} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(0, lst.length)
+      done()
+    })
+  })
+
+  it('use nin$ three matching', function (done) {
+    var product = si.make('product')
+
+    product.list$({ price: {nin$: [250, 500, 700]}, sort$: {price: 1} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(3, lst.length)
+      done()
+    })
+  })
+
+  it('use nin$ one matching', function (done) {
+    var product = si.make('product')
+
+    product.list$({ price: {nin$: [200, 500, 300]}, sort$: {price: 1} }, function (err, lst) {
       assert(!err)
 
       assert.equal(1, lst.length)
