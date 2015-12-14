@@ -67,8 +67,22 @@ The standard Seneca query format is supported:
 
 - `.list$({f1:v1,...}, {fields$:['fd1','f2']})` means only return the listed fields.
 
+
+Starting from version version 0.8.3 list$ supports also these operators:
+
+- ne$: `.list$({ne$: v1})` for not-equal. 
+- eq$: `.list$({ne$: v1})` for equal. 
+- lte$: `.list$({ne$: v1})` for less than or equal. 
+- lt$: `.list$({ne$: v1})` for less than. 
+- gte$: `.list$({ne$: v1})` for greater than or equal. 
+- gt$: `.list$({ne$: v1})` for greater than. 
+- in$: `.list$({ne$: [v1, v2]})` for in. in$ operator accepts only values of type array. 
+- nin$: `.list$({ne$: [v1, v2]})` for not-in. nin$ operator accepts only values of type array. 
+
+
 Note: you can use `sort$`, `limit$`, `skip$` and `fields$` together.
 
+Note: you can use any operators described above together.
 
 ## Limits
 

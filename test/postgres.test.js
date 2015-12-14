@@ -253,5 +253,17 @@ describe('postgres store API V2.0.0', function () {
     })
   })
 
+  it('use complex in$ and nin$', function (done) {
+    var product = si.make('product')
+
+    product.list$({ price: {nin$: [250, 500, 300], in$: [200, 300]}, sort$: {price: 1} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(1, lst.length)
+      assert.equal('pear', lst[0].name)
+      done()
+    })
+  })
+
 })
 

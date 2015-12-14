@@ -1,6 +1,6 @@
 {
   "name": "seneca-postgresql-store",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Seneca data store plugin for PostgreSQL",
   "main": "lib/postgresql-store.js",
   "author": "Marian Radulescu",
@@ -16,7 +16,7 @@
   "readmeFilename": "README.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nherment/seneca-postgresql-store"
+    "url": "https://github.com/marianr/seneca-postgres-store"
   },
   "keywords": [
     "seneca",
