@@ -81,7 +81,7 @@ describe('postgres store API V2.0.0', function () {
     })
   })
 
-  it('use not equal', function (done) {
+  it('use not equal ne$', function (done) {
     var product = si.make('product')
 
     product.list$({ price: {ne$: 200}, sort$: {price: 1} }, function (err, lst) {
@@ -93,5 +93,56 @@ describe('postgres store API V2.0.0', function () {
       done()
     })
   })
+
+  it('use gte$', function (done) {
+    var product = si.make('product')
+
+    product.list$({ price: {gte$: 200}, sort$: {price: 1} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(2, lst.length)
+      assert.equal('pear', lst[0].name)
+      assert.equal('cherry', lst[1].name)
+      done()
+    })
+  })
+
+  it('use gt$', function (done) {
+    var product = si.make('product')
+
+    product.list$({ price: {gt$: 200}, sort$: {price: 1} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(1, lst.length)
+      assert.equal('cherry', lst[0].name)
+      done()
+    })
+  })
+
+  it('use lte$', function (done) {
+    var product = si.make('product')
+
+    product.list$({ price: {lte$: 200}, sort$: {price: 1} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(2, lst.length)
+      assert.equal('apple', lst[0].name)
+      assert.equal('pear', lst[1].name)
+      done()
+    })
+  })
+
+  it('use lt$', function (done) {
+    var product = si.make('product')
+
+    product.list$({ price: {lt$: 200}, sort$: {price: 1} }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(1, lst.length)
+      assert.equal('apple', lst[0].name)
+      done()
+    })
+  })
+
 })
 
