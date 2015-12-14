@@ -70,14 +70,14 @@ The standard Seneca query format is supported:
 
 Starting from version version 0.8.3 list$ supports also these operators:
 
-- ne$: `.list$({ne$: v1})` for not-equal. 
-- eq$: `.list$({ne$: v1})` for equal. 
-- lte$: `.list$({ne$: v1})` for less than or equal. 
-- lt$: `.list$({ne$: v1})` for less than. 
-- gte$: `.list$({ne$: v1})` for greater than or equal. 
-- gt$: `.list$({ne$: v1})` for greater than. 
-- in$: `.list$({ne$: [v1, v2]})` for in. in$ operator accepts only values of type array. 
-- nin$: `.list$({ne$: [v1, v2]})` for not-in. nin$ operator accepts only values of type array. 
+- ne$: `.list$({ f1: {ne$: v1} })` for not-equal. 
+- eq$: `.list$({ f1: {eq$: v1} })` for equal. 
+- lte$: `.list$({ f1: {lte$: 5} })` for less than or equal. 
+- lt$: `.list$({ f1: {lt$: 5} })` for less than. 
+- gte$: `.list$({ f1: {gte$: 5} })` for greater than or equal. 
+- gt$: `.list$({ f1: {gt$: 5} })` for greater than. 
+- in$: `.list$({ f1: {in$: [10, 20]} })` for in. in$ operator accepts only values of type array. 
+- nin$: `.list$({ f1: {nin$: ["'v1'", "'v2'"]} })` for not-in. nin$ operator accepts only values of type array. 
 
 
 Note: you can use `sort$`, `limit$`, `skip$` and `fields$` together.
