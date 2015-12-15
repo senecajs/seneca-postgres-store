@@ -1,10 +1,10 @@
 ![Seneca](http://senecajs.org/files/assets/seneca-logo.png)
-> A [Seneca.js][] data storage plugin
+> A [Seneca.js](http://senecajs.org) data storage plugin
 
 seneca-postgres-store
 =======================
 
-[![Build Status](https://travis-ci.org/nherment/seneca-postgresql-store.svg)](https://travis-ci.org/nherment/seneca-postgresql-store)
+[![npm version][npm-badge]][npm-url]
 
 seneca-postgres-store is a [PostgreSQL][postgresqlorg] database plugin for the [Seneca][seneca] MVP toolkit. The plugin is using the
 [node-postgres][nodepg] driver.
@@ -112,3 +112,6 @@ entity.native$( function (err, client, releaseConnection){
 ## Contributing
 We encourage participation. If you feel you can help in any way, be it with
 examples, extra testing, or new features please get in touch.
+
+[npm-badge]: https://badge.fury.io/js/seneca-postgres-store.svg
+[npm-url]: https://badge.fury.io/js/seneca-postgres-store
