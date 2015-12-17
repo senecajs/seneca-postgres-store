@@ -95,6 +95,8 @@ To filter the fields returned from the `list` operation, pass a `fields$` array 
     query.fields$ = ['id', 'name']
 
 
+Note: The implicit id that is generated on save$ has uuid value. To override this you must provide entity.id$ with a desired value.
+
 ### Native Driver
 As with all seneca stores, you can access the native driver, in this case, the `pg`
 `connection` object using `entity.native$(function (err, connectionPool, release) {...})`.
