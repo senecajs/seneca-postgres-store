@@ -73,8 +73,6 @@ The standard Seneca query format is supported:
 This includes support for more complex queries.
 
 
-### List new operators
-
 ### Comparison query operators
 
 Starting from version version 1.x.x list$ supports also these comparison operators:
@@ -108,7 +106,7 @@ Note: These logical operators can be used also with any Comparison query operato
 
 Note: A complex example:
 
-`
+```js
 ent.list$( 
   { 
     or$: [
@@ -126,7 +124,7 @@ ent.list$(
   }, function(err, list){
     // do something with result...
   } )
-`
+```
 
 ## Limits
 
