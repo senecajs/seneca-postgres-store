@@ -12,7 +12,7 @@ CREATE ROLE "senecatest" LOGIN PASSWORD 'senecatest';
 
 CREATE TABLE foo 
 (
-  id character varying, 
+  id character varying PRIMARY KEY,
   p1 character varying, 
   p2 character varying,
   p3 character varying
@@ -22,7 +22,7 @@ ALTER TABLE foo OWNER TO senecatest;
 CREATE TABLE moon_bar 
 ( 
   str character varying, 
-  id character varying, 
+  id character varying PRIMARY KEY,
   "int" integer,  
   bol boolean, 
   wen timestamp with time zone, 
@@ -37,7 +37,7 @@ ALTER TABLE moon_bar OWNER TO senecatest;
 CREATE TABLE product
 (
   name character varying,
-  id character varying,
+  id character varying PRIMARY KEY,
   price integer
 );
 ALTER TABLE product OWNER TO senecatest;

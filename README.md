@@ -68,7 +68,14 @@ The standard Seneca query format is supported:
 - `.list$({f1:v1,...}, {fields$:['fd1','f2']})` means only return the listed fields.
 
 
-Starting from version version 0.8.3 list$ supports also these operators:
+## Support for Seneca store V2.0.0
+
+This includes support for more complex queries.
+
+
+### Comparison query operators
+
+Starting from version version 1.x.x list$ supports also these comparison operators:
 
 - ne$: `.list$({ f1: {ne$: v1} })` for not-equal. 
 - eq$: `.list$({ f1: {eq$: v1} })` for equal. 
@@ -84,6 +91,41 @@ Note: you can use `sort$`, `limit$`, `skip$` and `fields$` together.
 
 Note: you can use any operators described above together.
 
+### Logical query operators
+
+Starting from version version 1.1.x list$ supports also these logical operators:
+
+- or$: `.list$({ or$: [{name: 'something'}, {price: 200}]})`
+- and$: `.list$({ and$: [{name: 'something'}, {price: 200}]})`
+
+Note: These logical operators accepts only arrays as values.
+
+Note: These operators can be used together to build more complex queries
+
+Note: These logical operators can be used also with any Comparison query operators described above.
+
+Note: A complex example:
+
+```js
+ent.list$( 
+  { 
+    or$: [
+      {name: 'something'}, 
+      {
+        and$: [
+          {price: {gte$: 100}}, 
+          {name: 'other'}
+        ]
+      }, 
+      {color: { ne$: 'red' }}
+    ], 
+    sort$: {name: 1},
+    fields$: ['name', 'color']
+  }, function(err, list){
+    // do something with result...
+  } )
+```
+
 ## Limits
 
 By default queries are limited to 20 values. This can be bypassed by passing the `nolimit` option, which if set to true will not limit any queries.
@@ -94,6 +136,8 @@ To filter the fields returned from the `list` operation, pass a `fields$` array 
 
     query.fields$ = ['id', 'name']
 
+
+Note: The implicit id that is generated on save$ has uuid value. To override this you must provide entity.id$ with a desired value.
 
 ### Native Driver
 As with all seneca stores, you can access the native driver, in this case, the `pg`

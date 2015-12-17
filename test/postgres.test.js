@@ -60,13 +60,13 @@ describe('postgres store API V2.0.0', function () {
 
     Async.series([
       function clear (next) {
-        Product.remove$({ all$: true }, next)
+        Product.remove$({all$: true}, next)
       },
       function create (next) {
         var products = [
-          Product.make$({ name: 'apple', price: 100 }),
-          Product.make$({ name: 'pear', price: 200 }),
-          Product.make$({ name: 'cherry', price: 300 })
+          Product.make$({name: 'apple', price: 100}),
+          Product.make$({name: 'pear', price: 200}),
+          Product.make$({name: 'cherry', price: 300})
         ]
 
         function saveproduct (product, saved) {
@@ -84,7 +84,7 @@ describe('postgres store API V2.0.0', function () {
   it('use not equal ne$', function (done) {
     var product = si.make('product')
 
-    product.list$({ price: {ne$: 200}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({price: {ne$: 200}, sort$: {price: 1}}, function (err, lst) {
       assert(!err)
 
       assert.equal(2, lst.length)
@@ -97,7 +97,7 @@ describe('postgres store API V2.0.0', function () {
   it('use not equal ne$ string', function (done) {
     var product = si.make('product')
 
-    product.list$({ name: {ne$: 'pear'}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({name: {ne$: 'pear'}, sort$: {price: 1}}, function (err, lst) {
       assert(!err)
 
       assert.equal(2, lst.length)
@@ -110,7 +110,7 @@ describe('postgres store API V2.0.0', function () {
   it('use eq$', function (done) {
     var product = si.make('product')
 
-    product.list$({ price: {eq$: 200} }, function (err, lst) {
+    product.list$({price: {eq$: 200}}, function (err, lst) {
       assert(!err)
 
       assert.equal(1, lst.length)
@@ -122,7 +122,7 @@ describe('postgres store API V2.0.0', function () {
   it('use eq$ string', function (done) {
     var product = si.make('product')
 
-    product.list$({ name: {eq$: 'pear'} }, function (err, lst) {
+    product.list$({name: {eq$: 'pear'}}, function (err, lst) {
       assert(!err)
 
       assert.equal(1, lst.length)
@@ -134,7 +134,7 @@ describe('postgres store API V2.0.0', function () {
   it('use gte$', function (done) {
     var product = si.make('product')
 
-    product.list$({ price: {gte$: 200}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({price: {gte$: 200}, sort$: {price: 1}}, function (err, lst) {
       assert(!err)
 
       assert.equal(2, lst.length)
@@ -147,7 +147,7 @@ describe('postgres store API V2.0.0', function () {
   it('use gt$', function (done) {
     var product = si.make('product')
 
-    product.list$({ price: {gt$: 200}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({price: {gt$: 200}, sort$: {price: 1}}, function (err, lst) {
       assert(!err)
 
       assert.equal(1, lst.length)
@@ -159,7 +159,7 @@ describe('postgres store API V2.0.0', function () {
   it('use lte$', function (done) {
     var product = si.make('product')
 
-    product.list$({ price: {lte$: 200}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({price: {lte$: 200}, sort$: {price: 1}}, function (err, lst) {
       assert(!err)
 
       assert.equal(2, lst.length)
@@ -172,7 +172,7 @@ describe('postgres store API V2.0.0', function () {
   it('use lt$', function (done) {
     var product = si.make('product')
 
-    product.list$({ price: {lt$: 200}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({price: {lt$: 200}, sort$: {price: 1}}, function (err, lst) {
       assert(!err)
 
       assert.equal(1, lst.length)
@@ -184,7 +184,7 @@ describe('postgres store API V2.0.0', function () {
   it('use in$', function (done) {
     var product = si.make('product')
 
-    product.list$({ price: {in$: [200, 300]}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({price: {in$: [200, 300]}, sort$: {price: 1}}, function (err, lst) {
       assert(!err)
 
       assert.equal(2, lst.length)
@@ -197,7 +197,7 @@ describe('postgres store API V2.0.0', function () {
   it('use in$ string', function (done) {
     var product = si.make('product')
 
-    product.list$({ name: {in$: ['cherry', 'pear']}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({name: {in$: ['cherry', 'pear']}, sort$: {price: 1}}, function (err, lst) {
       assert(!err)
 
       assert.equal(2, lst.length)
@@ -210,7 +210,7 @@ describe('postgres store API V2.0.0', function () {
   it('use in$ one matching', function (done) {
     var product = si.make('product')
 
-    product.list$({ price: {in$: [200, 500, 700]}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({price: {in$: [200, 500, 700]}, sort$: {price: 1}}, function (err, lst) {
       assert(!err)
 
       assert.equal(1, lst.length)
@@ -222,7 +222,7 @@ describe('postgres store API V2.0.0', function () {
   it('use in$ no matching', function (done) {
     var product = si.make('product')
 
-    product.list$({ price: {in$: [250, 500, 700]}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({price: {in$: [250, 500, 700]}, sort$: {price: 1}}, function (err, lst) {
       assert(!err)
 
       assert.equal(0, lst.length)
@@ -233,7 +233,7 @@ describe('postgres store API V2.0.0', function () {
   it('use nin$ three matching', function (done) {
     var product = si.make('product')
 
-    product.list$({ price: {nin$: [250, 500, 700]}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({price: {nin$: [250, 500, 700]}, sort$: {price: 1}}, function (err, lst) {
       assert(!err)
 
       assert.equal(3, lst.length)
@@ -244,7 +244,7 @@ describe('postgres store API V2.0.0', function () {
   it('use nin$ one matching', function (done) {
     var product = si.make('product')
 
-    product.list$({ price: {nin$: [200, 500, 300]}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({price: {nin$: [200, 500, 300]}, sort$: {price: 1}}, function (err, lst) {
       assert(!err)
 
       assert.equal(1, lst.length)
@@ -256,7 +256,7 @@ describe('postgres store API V2.0.0', function () {
   it('use complex in$ and nin$', function (done) {
     var product = si.make('product')
 
-    product.list$({ price: {nin$: [250, 500, 300], in$: [200, 300]}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({price: {nin$: [250, 500, 300], in$: [200, 300]}, sort$: {price: 1}}, function (err, lst) {
       assert(!err)
 
       assert.equal(1, lst.length)
@@ -268,7 +268,7 @@ describe('postgres store API V2.0.0', function () {
   it('use nin$ string', function (done) {
     var product = si.make('product')
 
-    product.list$({ name: {nin$: ['cherry', 'pear']}, sort$: {price: 1} }, function (err, lst) {
+    product.list$({name: {nin$: ['cherry', 'pear']}, sort$: {price: 1}}, function (err, lst) {
       assert(!err)
 
       assert.equal(1, lst.length)
@@ -277,5 +277,44 @@ describe('postgres store API V2.0.0', function () {
     })
   })
 
-})
+  it('use or$', function (done) {
+    var product = si.make('product')
 
+    product.list$({or$: [{name: 'cherry'}, {price: 200}], sort$: {price: 1}}, function (err, lst) {
+      assert(!err)
+
+      assert.equal(2, lst.length)
+      assert.equal('pear', lst[0].name)
+      assert.equal('cherry', lst[1].name)
+      done()
+    })
+  })
+
+  it('use and$', function (done) {
+    var product = si.make('product')
+
+    product.list$({and$: [{name: 'cherry'}, {price: 300}], sort$: {price: 1}}, function (err, lst) {
+      assert(!err)
+
+      assert.equal(1, lst.length)
+      assert.equal('cherry', lst[0].name)
+      done()
+    })
+  })
+
+  it('use and$ & or$', function (done) {
+    var product = si.make('product')
+
+    product.list$({
+      or$: [{price: {gte$: 200}}, {and$: [{name: 'cherry'}, {price: 300}]}],
+      sort$: {price: 1}
+    }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(2, lst.length)
+      assert.equal('pear', lst[0].name)
+      assert.equal('cherry', lst[1].name)
+      done()
+    })
+  })
+})
