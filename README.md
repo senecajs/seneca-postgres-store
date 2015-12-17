@@ -95,8 +95,8 @@ Note: you can use any operators described above together.
 
 Starting from version version 1.1.x list$ supports also these logical operators:
 
-- or$: `.list$({ or$: [name: 'something', price: 200]})`
-- and$: `.list$({ and$: [name: 'something', price: 200]})`
+- or$: `.list$({ or$: [{name: 'something'}, {price: 200}]})`
+- and$: `.list$({ and$: [{name: 'something'}, {price: 200}]})`
 
 Note: These logical operators accepts only arrays as values.
 
