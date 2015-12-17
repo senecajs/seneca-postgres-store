@@ -120,7 +120,7 @@ ent.list$(
       {color: { ne$: 'red' }}
     ], 
     sort$: {name: 1},
-    fields$: ['name', color]
+    fields$: ['name', 'color']
   }, function(err, list){
     // do something with result...
   } )
