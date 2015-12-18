@@ -12,7 +12,7 @@ seneca-postgres-store is a [PostgreSQL][postgresqlorg] database plugin for the [
 Usage:
 
     var seneca = require('seneca');
-    var store = require('seneca-postgresql-store');
+    var store = require('seneca-postgres-store');
 
     var config = {}
     var storeopts = {

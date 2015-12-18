@@ -317,4 +317,41 @@ describe('postgres store API V2.0.0', function () {
       done()
     })
   })
+
+  it('use and$ & or$ and limit$', function (done) {
+    var product = si.make('product')
+
+    product.list$({
+      or$: [{price: {gte$: 200}}, {and$: [{name: 'cherry'}, {price: 300}]}],
+      sort$: {price: 1},
+      limit$: 1,
+      fields$: ['name']
+    }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(1, lst.length)
+      assert.equal('pear', lst[0].name)
+      assert(!lst[0].price)
+      done()
+    })
+  })
+
+  it('use and$ & or$ and limit$, fields$ and skip$', function (done) {
+    var product = si.make('product')
+
+    product.list$({
+      price: {gte$: 200},
+      sort$: {price: 1},
+      limit$: 1,
+      fields$: ['name'],
+      skip$: 1
+    }, function (err, lst) {
+      assert(!err)
+
+      assert.equal(1, lst.length)
+      assert.equal('cherry', lst[0].name)
+      assert(!lst[0].price)
+      done()
+    })
+  })
 })
