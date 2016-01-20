@@ -33,7 +33,8 @@
     "package.json"
   ],
   "scripts": {
-    "test": "node_modules/.bin/lab test  -r console -v -L -t 70"
+    "test": "lab test  -r console -v -L -t 70",
+    "lint": "lab -dL"
   },
   "dependencies": {
     "lodash": "3.10.1",
