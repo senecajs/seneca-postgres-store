@@ -1,10 +1,22 @@
 language: node_js
+sudo: false
+
 node_js:
-  - 0.11
-  - 0.10
-  - 4
-  - 5
+  - '5'
+  - '4'
+  - '0.12'
+  - '0.11'
+  - '0.10'
+
+cache:
+  directories:
+    - node_modules
+
 addons:
   postgresql: "9.4"
+
+services:
+  - postgresql
+
 before_script:
   - psql -U postgres -f scripts/dbschema.sql
