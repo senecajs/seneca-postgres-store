@@ -15,6 +15,7 @@ var DefaultConfig = require('./default_config.json')
 
 var si = Seneca()
 si.use(require('..'), DefaultConfig)
+si.use(require('seneca-store-query'))
 
 describe('Basic Test', function () {
   Shared.basictest({
