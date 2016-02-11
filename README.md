@@ -164,11 +164,11 @@ examples, extra testing, or new features please get in touch.
 
 [npm-badge]: https://img.shields.io/npm/v/seneca-postgres-store.svg
 [npm-url]: https://npmjs.com/package/seneca-postgres-store
-[travis-badge]: https://api.travis-ci.org/mirceaalexandru/seneca-postgres-store.svg
-[travis-url]: https://travis-ci.org/mirceaalexandru/seneca-postgres-store
-[david-badge]: https://david-dm.org/mirceaalexandru/seneca-postgres-store.svg
-[david-url]: https://david-dm.org/mirceaalexandru/seneca-postgres-store
-[codeclimate-badge]: https://codeclimate.com/github/mirceaalexandru/seneca-postgres-store/badges/gpa.svg
-[codeclimate-url]: https://codeclimate.com/github/mirceaalexandru/seneca-postgres-store
+[travis-badge]: https://api.travis-ci.org/senecajs/seneca-postgres-store.svg
+[travis-url]: https://travis-ci.org/senecajs/seneca-postgres-store
+[david-badge]: https://david-dm.org/senecajs/seneca-postgres-store.svg
+[david-url]: https://david-dm.org/senecajs/seneca-postgres-store
+[codeclimate-badge]: https://codeclimate.com/github/senecajs/seneca-postgres-store/badges/gpa.svg
+[codeclimate-url]: https://codeclimate.com/github/senecajs/seneca-postgres-store
 [gitter-badge]: https://badges.gitter.im/Join%20Chat.svg
 [gitter-url]: https://gitter.im/senecajs/seneca

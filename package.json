@@ -33,7 +33,7 @@
     "package.json"
   ],
   "scripts": {
-    "test": "lab test  -r console -v -L -t 70",
+    "test": "lab test  -r console -v -L -t 60",
     "lint": "lab -dL"
   },
   "dependencies": {
