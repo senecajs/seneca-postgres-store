@@ -1,10 +1,14 @@
 'use strict'
 
-var Asserrt = require('assert')
 var Seneca = require('seneca')
+
 var Lab = require('lab')
 var lab = exports.lab = Lab.script()
+var Code = require('code')
+var expect = Code.expect
+
 var Async = require('async')
+var Uuid = require('node-uuid')
 
 var describe = lab.describe
 var before = lab.before
@@ -15,6 +19,7 @@ var DefaultConfig = require('./default_config.json')
 
 var si = Seneca()
 si.use(require('..'), DefaultConfig)
+var storeName = 'postgresql-store'
 
 describe('Basic Test', function () {
   Shared.basictest({
@@ -39,18 +44,31 @@ describe('Basic Test', function () {
 })
 
 describe('postgres', function () {
-  it('save with passing an id$', function (done) {
-    var product = si.make('foo')
+  it('save with passing an external id', function (done) {
+    var idPrefix = 'test_'
+    si.add({role: storeName, hook: 'generate_id'}, function (args, done) {
+      return done(null, {id: idPrefix + Uuid()})
+    })
 
-    product.id$ = '12345'
-    product.p1 = 'pear'
+    var foo = si.make('foo')
+    foo.p1 = 'v1'
+    foo.p2 = 'v2'
 
-    si.act({role: 'entity', cmd: 'save', ent: product},
-        function (err, product) {
-          Asserrt(!err)
-          Asserrt.equal(product.id, '12345')
-          done()
-        })
+    foo.save$(function (err, foo1) {
+      expect(err).to.not.exist()
+      expect(foo1.id).to.exist()
+      expect(foo1.id).to.startWith(idPrefix)
+
+      foo1.load$(foo1.id, function (err, foo2) {
+        expect(err).to.not.exist()
+        expect(foo2).to.exist()
+        expect(foo2.id).to.equal(foo1.id)
+        expect(foo2.p1).to.equal('v1')
+        expect(foo2.p2).to.equal('v2')
+
+        done()
+      })
+    })
   })
 })
 
@@ -76,7 +94,7 @@ describe('postgres store API V2.0.0', function () {
         Async.forEach(products, saveproduct, next)
       }
     ], function (err) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
       done()
     })
   })
@@ -85,11 +103,11 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({price: {ne$: 200}, sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(2, lst.length)
-      Asserrt.equal('apple', lst[0].name)
-      Asserrt.equal('cherry', lst[1].name)
+      expect(2).to.equal(lst.length)
+      expect('apple').to.equal(lst[0].name)
+      expect('cherry').to.equal(lst[1].name)
       done()
     })
   })
@@ -98,11 +116,11 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({name: {ne$: 'pear'}, sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(2, lst.length)
-      Asserrt.equal('apple', lst[0].name)
-      Asserrt.equal('cherry', lst[1].name)
+      expect(2).to.equal(lst.length)
+      expect('apple').to.equal(lst[0].name)
+      expect('cherry').to.equal(lst[1].name)
       done()
     })
   })
@@ -111,10 +129,10 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({price: {eq$: 200}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(1, lst.length)
-      Asserrt.equal('pear', lst[0].name)
+      expect(1).to.equal(lst.length)
+      expect('pear').to.equal(lst[0].name)
       done()
     })
   })
@@ -123,10 +141,10 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({name: {eq$: 'pear'}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(1, lst.length)
-      Asserrt.equal('pear', lst[0].name)
+      expect(1).to.equal(lst.length)
+      expect('pear').to.equal(lst[0].name)
       done()
     })
   })
@@ -135,11 +153,11 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({price: {gte$: 200}, sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(2, lst.length)
-      Asserrt.equal('pear', lst[0].name)
-      Asserrt.equal('cherry', lst[1].name)
+      expect(2).to.equal(lst.length)
+      expect('pear').to.equal(lst[0].name)
+      expect('cherry').to.equal(lst[1].name)
       done()
     })
   })
@@ -148,10 +166,10 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({price: {gt$: 200}, sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(1, lst.length)
-      Asserrt.equal('cherry', lst[0].name)
+      expect(1).to.equal(lst.length)
+      expect('cherry').to.equal(lst[0].name)
       done()
     })
   })
@@ -160,11 +178,11 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({price: {lte$: 200}, sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(2, lst.length)
-      Asserrt.equal('apple', lst[0].name)
-      Asserrt.equal('pear', lst[1].name)
+      expect(2).to.equal(lst.length)
+      expect('apple').to.equal(lst[0].name)
+      expect('pear').to.equal(lst[1].name)
       done()
     })
   })
@@ -173,10 +191,10 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({price: {lt$: 200}, sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(1, lst.length)
-      Asserrt.equal('apple', lst[0].name)
+      expect(1).to.equal(lst.length)
+      expect('apple').to.equal(lst[0].name)
       done()
     })
   })
@@ -185,11 +203,11 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({price: {in$: [200, 300]}, sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(2, lst.length)
-      Asserrt.equal('pear', lst[0].name)
-      Asserrt.equal('cherry', lst[1].name)
+      expect(2).to.equal(lst.length)
+      expect('pear').to.equal(lst[0].name)
+      expect('cherry').to.equal(lst[1].name)
       done()
     })
   })
@@ -198,11 +216,11 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({name: {in$: ['cherry', 'pear']}, sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(2, lst.length)
-      Asserrt.equal('pear', lst[0].name)
-      Asserrt.equal('cherry', lst[1].name)
+      expect(2).to.equal(lst.length)
+      expect('pear').to.equal(lst[0].name)
+      expect('cherry').to.equal(lst[1].name)
       done()
     })
   })
@@ -211,10 +229,10 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({price: {in$: [200, 500, 700]}, sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(1, lst.length)
-      Asserrt.equal('pear', lst[0].name)
+      expect(1).to.equal(lst.length)
+      expect('pear').to.equal(lst[0].name)
       done()
     })
   })
@@ -223,9 +241,9 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({price: {in$: [250, 500, 700]}, sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(0, lst.length)
+      expect(0).to.equal(lst.length)
       done()
     })
   })
@@ -234,9 +252,9 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({price: {nin$: [250, 500, 700]}, sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(3, lst.length)
+      expect(3).to.equal(lst.length)
       done()
     })
   })
@@ -245,10 +263,10 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({price: {nin$: [200, 500, 300]}, sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(1, lst.length)
-      Asserrt.equal('apple', lst[0].name)
+      expect(1).to.equal(lst.length)
+      expect('apple').to.equal(lst[0].name)
       done()
     })
   })
@@ -257,10 +275,10 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({price: {nin$: [250, 500, 300], in$: [200, 300]}, sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(1, lst.length)
-      Asserrt.equal('pear', lst[0].name)
+      expect(1).to.equal(lst.length)
+      expect('pear').to.equal(lst[0].name)
       done()
     })
   })
@@ -269,10 +287,10 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({name: {nin$: ['cherry', 'pear']}, sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(1, lst.length)
-      Asserrt.equal('apple', lst[0].name)
+      expect(1).to.equal(lst.length)
+      expect('apple').to.equal(lst[0].name)
       done()
     })
   })
@@ -281,11 +299,11 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({or$: [{name: 'cherry'}, {price: 200}], sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(2, lst.length)
-      Asserrt.equal('pear', lst[0].name)
-      Asserrt.equal('cherry', lst[1].name)
+      expect(2).to.equal(lst.length)
+      expect('pear').to.equal(lst[0].name)
+      expect('cherry').to.equal(lst[1].name)
       done()
     })
   })
@@ -294,10 +312,10 @@ describe('postgres store API V2.0.0', function () {
     var product = si.make('product')
 
     product.list$({and$: [{name: 'cherry'}, {price: 300}], sort$: {price: 1}}, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(1, lst.length)
-      Asserrt.equal('cherry', lst[0].name)
+      expect(1).to.equal(lst.length)
+      expect('cherry').to.equal(lst[0].name)
       done()
     })
   })
@@ -309,11 +327,11 @@ describe('postgres store API V2.0.0', function () {
       or$: [{price: {gte$: 200}}, {and$: [{name: 'cherry'}, {price: 300}]}],
       sort$: {price: 1}
     }, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(2, lst.length)
-      Asserrt.equal('pear', lst[0].name)
-      Asserrt.equal('cherry', lst[1].name)
+      expect(2).to.equal(lst.length)
+      expect('pear').to.equal(lst[0].name)
+      expect('cherry').to.equal(lst[1].name)
       done()
     })
   })
@@ -327,11 +345,11 @@ describe('postgres store API V2.0.0', function () {
       limit$: 1,
       fields$: ['name']
     }, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(1, lst.length)
-      Asserrt.equal('pear', lst[0].name)
-      Asserrt(!lst[0].price)
+      expect(1).to.equal(lst.length)
+      expect('pear').to.equal(lst[0].name)
+      expect(lst[0].price).to.not.exist()
       done()
     })
   })
@@ -346,11 +364,11 @@ describe('postgres store API V2.0.0', function () {
       fields$: ['name'],
       skip$: 1
     }, function (err, lst) {
-      Asserrt(!err)
+      expect(err).to.not.exist()
 
-      Asserrt.equal(1, lst.length)
-      Asserrt.equal('cherry', lst[0].name)
-      Asserrt(!lst[0].price)
+      expect(1).to.equal(lst.length)
+      expect('cherry').to.equal(lst[0].name)
+      expect(lst[0].price).to.not.exist()
       done()
     })
   })
