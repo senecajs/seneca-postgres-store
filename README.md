@@ -143,6 +143,18 @@ To filter the fields returned from the `list` operation, pass a `fields$` array 
 
 Note: The implicit id that is generated on save$ has uuid value. To override this you must provide entity.id$ with a desired value.
 
+### Custom ID generator
+
+To generate custom IDs it is exposed a seneca action pattern hook that can be overwritten:
+
+
+```js
+seneca.add({role: 'sql', hook: 'generate_id', target: <store name>}, function (args, done) {
+  return done(null, {id: idPrefix + Uuid()})
+})
+
+```
+
 ### Native Driver
 As with all seneca stores, you can access the native driver, in this case, the `pg`
 `connection` object using `entity.native$(function (err, connectionPool, release) {...})`.
