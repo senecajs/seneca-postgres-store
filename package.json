@@ -45,7 +45,8 @@
   "dependencies": {
     "lodash": "3.10.1",
     "node-uuid": "1.4.7",
-    "pg": "4.4.3"
+    "pg": "4.4.3",
+    "seneca-standard-query": "1.0.0"
   },
   "devDependencies": {
     "seneca": "plugin",

@@ -20,6 +20,7 @@ var DefaultConfig = require('./default_config.json')
 
 var si = Seneca()
 si.use(require('..'), DefaultConfig)
+
 var storeName = 'postgresql-store'
 var actionRole = 'sql'
 
