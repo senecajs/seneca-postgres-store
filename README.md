@@ -168,6 +168,10 @@ entity.native$( function (err, client, releaseConnection){
 } )
 ```
 
+## Running tests
+
+To run the tests you need to have the docker image built and running, that is made executing `npm run build` then `npm run start`
+In another console execute `npm test`
 
 ## Contributing
 We encourage participation. If you feel you can help in any way, be it with

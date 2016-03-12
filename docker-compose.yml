@@ -1,8 +1,4 @@
-pg:
-  build: docker
-  expose:
-    - "5432"
-store:
-  build: .
-  links:
-   - pg
+postgres:
+  build: ./docker
+  ports:
+    - "5432:5432"
