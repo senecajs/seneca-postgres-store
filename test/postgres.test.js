@@ -19,7 +19,6 @@ var Shared = require('seneca-store-test')
 var DefaultConfig = require('./default_config.json')
 
 var si = Seneca()
-si.use(require('..'), DefaultConfig)
 
 var storeName = 'postgresql-store'
 var actionRole = 'sql'
@@ -63,6 +62,11 @@ function verify (cb, tests) {
 }
 
 describe('Basic Test', function () {
+  before({}, function (done) {
+    si.use(require('..'), DefaultConfig)
+    si.ready(done)
+  })
+
   Shared.basictest({
     seneca: si,
     script: lab
