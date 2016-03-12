@@ -64,7 +64,10 @@ function verify (cb, tests) {
 describe('Basic Test', function () {
   before({}, function (done) {
     si.use(require('..'), DefaultConfig)
-    si.ready(done)
+    si.ready(function () {
+      si.use(require('seneca-store-query'))
+      si.ready(done)
+    })
   })
 
   Shared.basictest({

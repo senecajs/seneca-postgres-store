@@ -46,7 +46,8 @@
     "lodash": "3.10.1",
     "node-uuid": "1.4.7",
     "pg": "4.4.3",
-    "seneca-standard-query": "1.0.0"
+    "seneca-standard-query": "1.0.0",
+    "seneca-store-query": "0.0.1"
   },
   "devDependencies": {
     "seneca": "plugin",
