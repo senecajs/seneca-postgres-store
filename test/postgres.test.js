@@ -20,6 +20,7 @@ var DefaultConfig = require('./default_config.json')
 var si = Seneca()
 si.use(require('..'), DefaultConfig)
 var storeName = 'postgresql-store'
+var actionRole = 'sql'
 
 describe('Basic Test', function () {
   Shared.basictest({
@@ -46,7 +47,7 @@ describe('Basic Test', function () {
 describe('postgres', function () {
   it('save with passing an external id', function (done) {
     var idPrefix = 'test_'
-    si.add({role: storeName, hook: 'generate_id'}, function (args, done) {
+    si.add({role: actionRole, hook: 'generate_id', target: storeName}, function (args, done) {
       return done(null, {id: idPrefix + Uuid()})
     })
 
