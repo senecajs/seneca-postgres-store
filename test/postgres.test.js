@@ -13,6 +13,7 @@ var Uuid = require('node-uuid')
 var describe = lab.describe
 var before = lab.before
 var it = lab.it
+var beforeEach = lab.beforeEach
 
 var Shared = require('seneca-store-test')
 var DefaultConfig = require('./default_config.json')
@@ -21,6 +22,44 @@ var si = Seneca()
 si.use(require('..'), DefaultConfig)
 var storeName = 'postgresql-store'
 var actionRole = 'sql'
+
+function clearDb (si) {
+  return function clear (done) {
+    Async.series([
+      function clearFoo (next) {
+        si.make('foo').remove$({ all$: true }, next)
+      },
+      function clearBar (next) {
+        si.make('zen', 'moon', 'bar').remove$({ all$: true }, next)
+      }
+    ], done)
+  }
+}
+
+function createEntities (si, name, data) {
+  return function create (done) {
+    Async.each(data, function (el, next) {
+      si.make$(name, el).save$(next)
+    }, done)
+  }
+}
+
+function verify (cb, tests) {
+  return function (error, out) {
+    if (error) {
+      return cb(error)
+    }
+
+    try {
+      tests(out)
+    }
+    catch (ex) {
+      return cb(ex)
+    }
+
+    cb()
+  }
+}
 
 describe('Basic Test', function () {
   Shared.basictest({
@@ -45,6 +84,16 @@ describe('Basic Test', function () {
 })
 
 describe('postgres', function () {
+  beforeEach(clearDb(si))
+  beforeEach(createEntities(si, 'foo', [{
+    id$: 'foo1',
+    p1: 'v1'
+  }, {
+    id$: 'foo2',
+    p1: 'v2',
+    p2: 'z2'
+  }]))
+
   it('save with passing an external id', function (done) {
     var idPrefix = 'test_'
     si.add({role: actionRole, hook: 'generate_id', target: storeName}, function (args, done) {
@@ -70,6 +119,19 @@ describe('postgres', function () {
         done()
       })
     })
+  })
+
+  it('should support opaque ids (array) and fields$', function (done) {
+    var foo = si.make('foo')
+    foo.list$({ids: ['foo1', 'foo2'], fields$: ['p1']}, verify(done, function (res) {
+      expect(2).to.equal(res.length)
+      expect(res[0].p1).to.equal('v1')
+      expect(res[0].p2).to.not.exist()
+      expect(res[0].p3).to.not.exist()
+      expect(res[1].p1).to.equal('v2')
+      expect(res[1].p2).to.not.exist()
+      expect(res[1].p3).to.not.exist()
+    }))
   })
 })
 
