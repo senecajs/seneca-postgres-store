@@ -143,8 +143,6 @@ describe('postgres', function () {
   })
 })
 
-return
-
 describe('postgres store API V2.0.0', function () {
   before(function (done) {
     var Product = si.make('product')
