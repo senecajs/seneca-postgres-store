@@ -19,4 +19,4 @@ services:
   - postgresql
 
 before_script:
-  - psql -U postgres -f scripts/dbschema.sql
+  - psql -U postgres -f docker/dbschema.sql
