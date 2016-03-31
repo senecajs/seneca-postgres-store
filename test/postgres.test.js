@@ -18,7 +18,11 @@ var beforeEach = lab.beforeEach
 var Shared = require('seneca-store-test')
 var DefaultConfig = require('./default_config.json')
 
-var si = Seneca()
+var si = Seneca({
+  default_plugins: {
+    'mem-store': false
+  }
+})
 
 var storeName = 'postgresql-store'
 var actionRole = 'sql'
