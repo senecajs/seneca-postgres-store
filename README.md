@@ -53,6 +53,9 @@ entity.list$({property: ...}, function (err, entity) { ... })
 entity.remove$({id: ...}, function (err, entity) { ... })
 ```
 
+### Seneca compatibility
+Supports Seneca versions from **0.6.5** up to **1.4.0**
+
 ### Query Support
 
 The standard Seneca query format is supported. See the [seneca-standard-store][standard-store] plugin for more details.

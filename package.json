@@ -46,10 +46,10 @@
     "lodash": "3.10.1",
     "node-uuid": "1.4.7",
     "pg": "4.4.3",
-    "seneca-standard-query": "0.0.3"
+    "seneca-standard-query": "0.x.x"
   },
   "devDependencies": {
-    "seneca": "1.3.0",
+    "seneca": "1.4.0",
     "async": "1.5.0",
     "docco": "0.7.0",
     "eslint-config-seneca": "1.x.x",
