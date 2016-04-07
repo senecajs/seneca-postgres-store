@@ -1,6 +1,7 @@
 'use strict'
 
 var Seneca = require('seneca')
+var _ = require('lodash')
 
 var Lab = require('lab')
 var lab = exports.lab = Lab.script()
@@ -445,6 +446,111 @@ describe('postgres store API V2.0.0', function () {
       expect('cherry').to.equal(lst[0].name)
       expect(lst[0].price).to.not.exist()
       done()
+    })
+  })
+})
+
+var siDefault = Seneca({
+  default_plugins: {
+    'mem-store': false
+  }
+})
+
+var siCustom = Seneca({
+  default_plugins: {
+    'mem-store': false
+  }
+})
+
+describe('Column Names conversions', function () {
+  describe('Default CamelCase to snake_case conversion', function () {
+    before({}, function (done) {
+      siDefault.use(require('..'), DefaultConfig)
+      siDefault.ready(function () {
+        siDefault.use(require('seneca-store-query'))
+        siDefault.ready(done)
+      })
+    })
+
+    beforeEach(clearDb(siDefault))
+    beforeEach(createEntities(siDefault, 'foo', [{
+      fooBar: 'fooBar',
+      bar_foo: 'bar_foo'
+    }]))
+
+    it('should not alter CamelCase column names', function (done) {
+      var foo = siDefault.make('foo')
+
+      foo.list$({native$: 'SELECT * FROM foo where "fooBar" = \'fooBar\''}, function (err, res) {
+        expect(err).to.not.exist()
+        expect(res.length).to.equal(1)
+
+        done()
+      })
+    })
+
+    it('should not alter snake_case column names', function (done) {
+      var foo = siDefault.make('foo')
+
+      foo.list$({native$: 'SELECT * FROM foo where bar_foo = \'bar_foo\''}, function (err, res) {
+        expect(err).to.not.exist()
+        expect(res.length).to.equal(1)
+
+        done()
+      })
+    })
+  })
+
+  describe('Custom CamelCase to snake_case conversion', function () {
+    var UpperCaseRegExp = /[A-Z]/g
+
+    // Replace "camelCase" with "camel_case"
+    function camelToSnakeCase (field) {
+      UpperCaseRegExp.lastIndex = 0
+      return field.replace(UpperCaseRegExp, function (str, offset) {
+        return ('_' + str.toLowerCase())
+      })
+    }
+
+    // Replace "snake_case" with "snakeCase"
+    function snakeToCamelCase (column) {
+      var arr = column.split('_')
+      var field = arr[0]
+      for (var i = 1; i < arr.length; i++) {
+        field += arr[i][0].toUpperCase() + arr[i].slice(1, arr[i].length)
+      }
+
+      return field
+    }
+
+    before({}, function (done) {
+      var caseConverter = {
+        toColumnName: camelToSnakeCase,
+        fromColumnName: snakeToCamelCase
+      }
+      var Config = _.assign({}, DefaultConfig, caseConverter)
+
+      siCustom.use(require('..'), Config)
+      siCustom.ready(function () {
+        siCustom.use(require('seneca-store-query'))
+        siCustom.ready(done)
+      })
+    })
+
+    beforeEach(clearDb(siCustom))
+    beforeEach(createEntities(siCustom, 'foo', [{
+      barFoo: 'barFoo'
+    }]))
+
+    it('should convert the CamelCase column name to snake case', function (done) {
+      var foo = siCustom.make('foo')
+
+      foo.list$({native$: 'SELECT * FROM foo where "bar_foo" = \'fooBar\''}, function (err, res) {
+        expect(err).to.not.exist()
+        expect(res.length).to.equal(1)
+
+        done()
+      })
     })
   })
 })
