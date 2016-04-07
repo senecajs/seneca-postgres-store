@@ -58,11 +58,19 @@ Supports Seneca versions from **0.6.5** up to **1.4.0**
 
 ### Query Support
 
-The standard Seneca query format is supported. See the [seneca-standard-store][standard-store] plugin for more details.
+The standard Seneca query format is supported. See the [seneca-standard-query][standard-query] plugin for more details.
 
-## Extend Query Support
+## Extended Query Support
 
 By using the [seneca-store-query][store-query] plugin its query capabilities can be extended. See the plugin page for more details.
+
+### Backward compatibility
+
+Internal CamelCase to snake_case column names conversion was removed.
+
+To update from seneca-postgres-store 1.x to 2.x on systems built with seneca-postgres-store 1.x you must provide to the plugin through its options the functions that do the CamelCase to snake_case conversion and back.
+
+See the [seneca-standard-query][standard-query] plugin for more details.
 
 ## Limits
 
@@ -122,5 +130,5 @@ examples, extra testing, or new features please get in touch.
 [codeclimate-url]: https://codeclimate.com/github/senecajs/seneca-postgres-store
 [gitter-badge]: https://badges.gitter.im/Join%20Chat.svg
 [gitter-url]: https://gitter.im/senecajs/seneca
-[standard-store]: https://github.com/senecajs/seneca-standard-store
+[standard-query]: https://github.com/senecajs/seneca-standard-query
 [store-query]: https://github.com/senecajs/seneca-store-query
