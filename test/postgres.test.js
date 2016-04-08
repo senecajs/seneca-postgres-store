@@ -481,9 +481,10 @@ describe('Column Names conversions', function () {
     it('should not alter CamelCase column names', function (done) {
       var foo = siDefault.make('foo')
 
-      foo.list$({native$: 'SELECT * FROM foo where "fooBar" = \'fooBar\''}, function (err, res) {
+      foo.list$({native$: 'SELECT * FROM foo WHERE "fooBar" = \'fooBar\''}, function (err, res) {
         expect(err).to.not.exist()
         expect(res.length).to.equal(1)
+        expect(res[0].fooBar).to.equal('fooBar')
 
         done()
       })
@@ -492,9 +493,10 @@ describe('Column Names conversions', function () {
     it('should not alter snake_case column names', function (done) {
       var foo = siDefault.make('foo')
 
-      foo.list$({native$: 'SELECT * FROM foo where bar_foo = \'bar_foo\''}, function (err, res) {
+      foo.list$({native$: 'SELECT * FROM foo WHERE bar_foo = \'bar_foo\''}, function (err, res) {
         expect(err).to.not.exist()
         expect(res.length).to.equal(1)
+        expect(res[0].bar_foo).to.equal('bar_foo')
 
         done()
       })
@@ -545,9 +547,10 @@ describe('Column Names conversions', function () {
     it('should convert the CamelCase column name to snake case', function (done) {
       var foo = siCustom.make('foo')
 
-      foo.list$({native$: 'SELECT * FROM foo where "bar_foo" = \'fooBar\''}, function (err, res) {
+      foo.list$({native$: 'SELECT * FROM foo WHERE "bar_foo" = \'barFoo\''}, function (err, res) {
         expect(err).to.not.exist()
         expect(res.length).to.equal(1)
+        expect(res[0].barFoo).to.equal('barFoo')
 
         done()
       })
