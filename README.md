@@ -11,7 +11,7 @@ seneca-postgres-store
 [![Gitter][gitter-badge]][gitter-url]
 
 seneca-postgres-store is a [PostgreSQL][postgresqlorg] database plugin for the [Seneca][seneca] MVP toolkit. The plugin is using the [node-postgres][nodepg] driver.
-For query generation it uses internally the [seneca-standard-store][standard-store] plugin and the standard functionality can be extended by using the [seneca-store-query][store-query] plugin.
+For query generation it uses internally the [seneca-standard-query][standard-query] plugin and the standard functionality can be extended by using the [seneca-store-query][store-query] plugin.
 
 Usage:
 
@@ -58,11 +58,34 @@ Supports Seneca versions from **0.6.5** up to **1.4.0**
 
 ### Query Support
 
-The standard Seneca query format is supported. See the [seneca-standard-store][standard-store] plugin for more details.
+The standard Seneca query format is supported. See the [seneca-standard-query][standard-query] plugin for more details.
 
-## Extend Query Support
+## Extended Query Support
 
 By using the [seneca-store-query][store-query] plugin its query capabilities can be extended. See the plugin page for more details.
+
+## Column name transformation, backward compatibility
+
+In seneca-postgres-store 2.0 the internal CamelCase to snake_case column names conversion was removed.
+
+To update from seneca-postgres-store 1.x to 2.x on systems built with seneca-postgres-store 1.x you must provide to the plugin through its options the functions that do the CamelCase to snake_case conversion and back. Any other name transformations to and from database column name can be also made with these. Example:
+
+```js
+var DefaultConfig = {
+...
+  fromColumnName: function (attr) {
+    // apply some conversion on column names
+    return attr.toUpperCase()
+  },
+  toColumnName: function (attr) {
+    // convert back column names
+    return attr.toLowerCase()
+  }
+}
+seneca.use(require('seneca-postgres-store'), DefaultConfig)
+```
+
+For a fully functional CamelCase to snake_case implementation sample please look in the postgres.test.js at the 'Column Names conversions' test code.
 
 ## Limits
 
@@ -122,5 +145,5 @@ examples, extra testing, or new features please get in touch.
 [codeclimate-url]: https://codeclimate.com/github/senecajs/seneca-postgres-store
 [gitter-badge]: https://badges.gitter.im/Join%20Chat.svg
 [gitter-url]: https://gitter.im/senecajs/seneca
-[standard-store]: https://github.com/senecajs/seneca-standard-store
+[standard-query]: https://github.com/senecajs/seneca-standard-query
 [store-query]: https://github.com/senecajs/seneca-store-query

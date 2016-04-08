@@ -15,8 +15,11 @@ CREATE TABLE foo
   id character varying PRIMARY KEY,
   p1 character varying,
   p2 character varying,
-  p3 character varying
+  p3 character varying,
+  "fooBar" character varying,
+  bar_foo character varying
 );
+
 ALTER TABLE foo OWNER TO senecatest;
 
 CREATE TABLE moon_bar
