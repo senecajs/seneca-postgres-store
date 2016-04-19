@@ -25,6 +25,10 @@ var si = Seneca({
   }
 })
 
+if (si.version >= '2.0.0') {
+  si.use('seneca-entity')
+}
+
 var storeName = 'postgresql-store'
 var actionRole = 'sql'
 

@@ -1,6 +1,11 @@
 language: node_js
 sudo: false
 
+matrix:
+  SENECA_VER=@1.2.0
+  SENECA_VER=@1.4.0
+  SENECA_VER=@2.0.x
+
 node_js:
   - '5'
   - '4'
