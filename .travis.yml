@@ -19,4 +19,5 @@ services:
   - postgresql
 
 before_script:
+  - npm install seneca$SENECA_VER
   - psql -U postgres -f docker/dbschema.sql
