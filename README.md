@@ -54,7 +54,7 @@ entity.remove$({id: ...}, function (err, entity) { ... })
 ```
 
 ### Seneca compatibility
-Supports Seneca versions from **0.6.5** up to **1.4.0**
+Supports Seneca versions **1.x**
 
 ### Query Support
 
