@@ -1,14 +1,15 @@
 ![Seneca](http://senecajs.org/files/assets/seneca-logo.png)
 > A [Seneca.js](http://senecajs.org) data storage plugin
 
-seneca-postgres-store
-=======================
+# seneca-postgres-store
 
 [![npm version][npm-badge]][npm-url]
 [![Build Status][travis-badge]][travis-url]
 [![Code Climate][codeclimate-badge]][codeclimate-url]
 [![Dependency Status][david-badge]][david-url]
 [![Gitter][gitter-badge]][gitter-url]
+
+## Description
 
 seneca-postgres-store is a [PostgreSQL][postgresqlorg] database plugin for the [Seneca][seneca] MVP toolkit. The plugin is using the [node-postgres][nodepg] driver.
 For query generation it uses internally the [seneca-standard-query][standard-query] plugin and the standard functionality can be extended by using the [seneca-store-query][store-query] plugin.
@@ -35,9 +36,8 @@ Usage:
     })
     ...
 
-[postgresqlorg]: http://www.postgresql.org/
-[seneca]: http://senecajs.org/
-[nodepg]: https://github.com/brianc/node-postgres
+### Seneca compatibility
+Supports Seneca versions **1.x**
 
 ## Usage
 You don't use this module directly. It provides an underlying data storage engine for the Seneca entity API:
@@ -52,9 +52,6 @@ entity.load$({id: ...}, function (err, entity) { ... })
 entity.list$({property: ...}, function (err, entity) { ... })
 entity.remove$({id: ...}, function (err, entity) { ... })
 ```
-
-### Seneca compatibility
-Supports Seneca versions **1.x**
 
 ### Query Support
 
@@ -125,16 +122,21 @@ entity.native$( function (err, client, releaseConnection){
 } )
 ```
 
-## Running tests
+## Contributing
+The [Senecajs org][] encourages open participation. If you feel you
+can help in any way, be it with documentation, examples, extra
+testing, or new features please get in touch.
 
+## Test
 To run the tests you need to have the docker image built and running, that is made executing `npm run build` then `npm run start`
 In another console execute `npm test`
 
-## Contributing
-We encourage participation. If you feel you can help in any way, be it with
-examples, extra testing, or new features please get in touch.
 
+## License
+Copyright (c) 2012, Marian Radulescu and other contributors.
+Licensed under [MIT][].
 
+[MIT]: ./LICENSE.txt
 [npm-badge]: https://img.shields.io/npm/v/seneca-postgres-store.svg
 [npm-url]: https://npmjs.com/package/seneca-postgres-store
 [travis-badge]: https://api.travis-ci.org/senecajs/seneca-postgres-store.svg
@@ -147,3 +149,7 @@ examples, extra testing, or new features please get in touch.
 [gitter-url]: https://gitter.im/senecajs/seneca
 [standard-query]: https://github.com/senecajs/seneca-standard-query
 [store-query]: https://github.com/senecajs/seneca-store-query
+[postgresqlorg]: http://www.postgresql.org/
+[seneca]: http://senecajs.org/
+[nodepg]: https://github.com/brianc/node-postgres
+[Senecajs org]: https://github.com/senecajs/
