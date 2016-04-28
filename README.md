@@ -133,7 +133,7 @@ In another console execute `npm test`
 
 
 ## License
-Copyright (c) 2012, Marian Radulescu and other contributors.
+Copyright (c) 2012 - 2016, Marian Radulescu and other contributors.
 Licensed under [MIT][].
 
 [MIT]: ./LICENSE.txt
