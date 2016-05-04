@@ -460,11 +460,19 @@ var siDefault = Seneca({
   }
 })
 
+if (siDefault.version >= '2.0.0') {
+  siDefault.use('seneca-entity')
+}
+
 var siCustom = Seneca({
   default_plugins: {
     'mem-store': false
   }
 })
+
+if (siCustom.version >= '2.0.0') {
+  siCustom.use('seneca-entity')
+}
 
 describe('Column Names conversions', function () {
   describe('Default CamelCase to snake_case conversion', function () {
