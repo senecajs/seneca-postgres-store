@@ -49,7 +49,7 @@
     "seneca-standard-query": "0.x.x"
   },
   "devDependencies": {
-    "seneca": "1.4.0",
+    "seneca": "plugin",
     "async": "1.5.0",
     "docco": "0.7.0",
     "eslint-config-seneca": "1.x.x",

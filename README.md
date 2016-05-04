@@ -37,7 +37,7 @@ Usage:
     ...
 
 ### Seneca compatibility
-Supports Seneca versions **1.x**
+Supports Seneca versions **1.x** and **2.x**
 
 ## Usage
 You don't use this module directly. It provides an underlying data storage engine for the Seneca entity API:
