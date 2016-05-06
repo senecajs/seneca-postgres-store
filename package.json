@@ -43,14 +43,14 @@
     "annotate": "docco lib/query-builder.js -o doc"
   },
   "dependencies": {
-    "lodash": "3.10.1",
     "node-uuid": "1.4.7",
-    "pg": "4.4.3",
+    "pg": "4.5.5",
     "seneca-standard-query": "0.x.x"
   },
   "devDependencies": {
     "seneca": "plugin",
-    "async": "1.5.0",
+    "lodash": "4.11.2",
+    "async": "1.5.2",
     "docco": "0.7.0",
     "eslint-config-seneca": "1.x.x",
     "eslint-plugin-hapi": "4.x.x",
