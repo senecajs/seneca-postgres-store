@@ -37,7 +37,7 @@ Usage:
     ...
 
 ### Seneca compatibility
-Supports Seneca versions **1.x**
+Supports Seneca versions **1.x** and **2.x**
 
 ## Usage
 You don't use this module directly. It provides an underlying data storage engine for the Seneca entity API:
@@ -127,9 +127,32 @@ The [Senecajs org][] encourages open participation. If you feel you
 can help in any way, be it with documentation, examples, extra
 testing, or new features please get in touch.
 
-## Test
-To run the tests you need to have the docker image built and running, that is made executing `npm run build` then `npm run start`
-In another console execute `npm test`
+## To run tests with Docker
+Build the PostgreSQL Docker image:
+
+```sh
+npm run build
+
+```
+
+Start the PostgreSQL container:
+```sh
+npm run start
+```
+
+Stop the PostgreSQL container:
+```sh
+npm run stop
+```
+
+While the container is running you can run the tests into another terminal:
+```sh
+npm run test
+```
+
+#### Testing for Mac users
+Before the tests can be run you must run `docker-machine env default` and copy the docker host address (example: '192.168.99.100'). 
+This address must be inserted into the test/default_config.json file as the value for the host variable. The tests can now be run.
 
 
 ## License
