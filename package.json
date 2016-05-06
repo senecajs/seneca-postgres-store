@@ -43,7 +43,7 @@
     "annotate": "docco lib/query-builder.js -o doc"
   },
   "dependencies": {
-    "lodash": "3.10.1",
+    "lodash": "4.11.2",
     "node-uuid": "1.4.7",
     "pg": "4.4.3",
     "seneca-standard-query": "0.x.x"
