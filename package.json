@@ -37,7 +37,7 @@
     "build": "docker-compose build",
     "start": "docker-compose up",
     "stop": "docker-compose kill",
-    "test": "lab test  -r console -v -L -t 60",
+    "test": "lab test -r console -v -L -t 60 $LAB_FLAGS",
     "lint": "lab -dL",
     "coverage": "lab -s test/*test.js  -r lcov | coveralls",
     "annotate": "docco lib/query-builder.js -o doc"
