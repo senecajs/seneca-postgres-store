@@ -38,6 +38,7 @@
     "start": "docker-compose up",
     "stop": "docker-compose kill",
     "test": "lab test -r console -v -L -t 60 $LAB_FLAGS",
+    "test:node6": "LAB_FLAGS='--leaks' && npm t",
     "lint": "lab -dL",
     "coverage": "lab -s test/*test.js  -r lcov | coveralls",
     "annotate": "docco lib/query-builder.js -o doc"
