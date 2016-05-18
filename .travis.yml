@@ -23,3 +23,6 @@ before_script:
   - npm install seneca$SENECA_VER
   - psql -U postgres -f docker/dbschema.sql
   - echo FLAGS:$LAB_FLAGS
+  
+after_script:
+  - npm run coverage
