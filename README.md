@@ -7,6 +7,7 @@
 [![Build Status][travis-badge]][travis-url]
 [![Code Climate][codeclimate-badge]][codeclimate-url]
 [![Dependency Status][david-badge]][david-url]
+[![Coveralls][BadgeCoveralls]][Coveralls]
 [![Gitter][gitter-badge]][gitter-url]
 
 ## Description
@@ -176,3 +177,5 @@ Licensed under [MIT][].
 [seneca]: http://senecajs.org/
 [nodepg]: https://github.com/brianc/node-postgres
 [Senecajs org]: https://github.com/senecajs/
+[Coveralls]: https://coveralls.io/github/senecajs/seneca-postgres-store?branch=master
+[BadgeCoveralls]: https://coveralls.io/repos/github/senecajs/seneca-postgres-store/badge.svg?branch=master

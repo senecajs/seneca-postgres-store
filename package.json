@@ -40,7 +40,7 @@
     "test": "lab test -r console -v -L -t 60 $LAB_FLAGS",
     "test:node6": "LAB_FLAGS='--leaks' && npm t",
     "lint": "lab -dL",
-    "coverage": "lab -s test/*test.js  -r lcov | coveralls",
+    "coverage": "lab test/*.test.js -v -r lcov | coveralls",
     "annotate": "docco lib/query-builder.js -o doc"
   },
   "dependencies": {
@@ -60,6 +60,7 @@
     "seneca-store-test": "1.0.0",
     "seneca-store-query": "0.x.x",
     "lab": "6.x.x",
-    "code": "1.5.x"
+    "code": "1.5.x",
+    "coveralls": "2.11.x"
   }
 }
