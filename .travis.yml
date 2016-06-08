@@ -20,6 +20,7 @@ services:
 
 before_script:
   - if [[ $TRAVIS_NODE_VERSION == "6" ]]; then export LAB_FLAGS="--leaks"; else export LAB_FLAGS=""; fi
+  - npm uninstall seneca
   - npm install seneca$SENECA_VER
   - psql -U postgres -f docker/dbschema.sql
   - echo FLAGS:$LAB_FLAGS
