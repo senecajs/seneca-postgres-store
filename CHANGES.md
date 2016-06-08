@@ -1,3 +1,8 @@
+## 2.1.0: 2016-06-08
+
+Updated dependencies
+! Updated pg from 4.x.x to 5.x.x
+
 ## 2.0.0: 2016-04-05
 
 Removed the internal conversion that the plugin was making from CamelCase column names to Snake case. Backward compatibility is ensured by allowing the user to pass into options two functions named toColumnName() and fromColumnName() that make this conversion. These should implement the CamelCase to Snake case conversion. More details are provided in the [README](https://github.com/senecajs/seneca-postgres-store) in the **Column name transformation, backward compatibility** section.

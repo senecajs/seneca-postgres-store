@@ -1,6 +1,6 @@
 {
   "name": "seneca-postgres-store",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Seneca data store plugin for PostgreSQL",
   "main": "lib/postgresql-store.js",
   "author": "Marian Radulescu",
@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "node-uuid": "1.4.7",
-    "pg": "5.0.0",
+    "pg": "5.x.x",
     "seneca-standard-query": "0.x.x"
   },
   "devDependencies": {
