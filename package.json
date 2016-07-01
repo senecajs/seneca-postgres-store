@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "seneca": "plugin",
-    "lodash": "4.11.2",
+    "lodash": "4.13.0",
     "async": "1.5.2",
     "docco": "0.7.0",
     "eslint-config-seneca": "1.x.x",
