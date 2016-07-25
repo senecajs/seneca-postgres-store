@@ -56,7 +56,7 @@
     "eslint-config-seneca": "1.x.x",
     "eslint-plugin-hapi": "4.x.x",
     "eslint-plugin-standard": "1.x.x",
-    "seneca-entity": "0.1.1",
+    "seneca-entity": "1.0.0",
     "seneca-store-test": "1.0.0",
     "seneca-store-query": "0.x.x",
     "lab": "6.x.x",
