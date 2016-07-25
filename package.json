@@ -60,7 +60,7 @@
     "seneca-store-test": "1.0.0",
     "seneca-store-query": "0.x.x",
     "lab": "6.x.x",
-    "code": "1.5.x",
+    "code": "3.0.1",
     "coveralls": "2.11.x"
   }
 }
