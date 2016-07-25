@@ -59,7 +59,7 @@
     "seneca-entity": "0.1.1",
     "seneca-store-test": "1.0.0",
     "seneca-store-query": "0.x.x",
-    "lab": "6.x.x",
+    "lab": "10.8.2",
     "code": "1.5.x",
     "coveralls": "2.11.x"
   }
