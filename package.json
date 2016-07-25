@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "node-uuid": "1.4.7",
-    "pg": "5.x.x",
+    "pg": "5.2.0",
     "seneca-standard-query": "0.x.x"
   },
   "devDependencies": {
