@@ -38,7 +38,7 @@ Usage:
     ...
 
 ### Seneca compatibility
-Supports Seneca versions **1.x** and **2.x**
+Supports Seneca versions **1.x** - **3.x**
 
 ## Usage
 You don't use this module directly. It provides an underlying data storage engine for the Seneca entity API:
@@ -152,7 +152,7 @@ npm run test
 ```
 
 #### Testing for Mac users
-Before the tests can be run you must run `docker-machine env default` and copy the docker host address (example: '192.168.99.100'). 
+Before the tests can be run you must run `docker-machine env default` and copy the docker host address (example: '192.168.99.100').
 This address must be inserted into the test/default_config.json file as the value for the host variable. The tests can now be run.
 
 

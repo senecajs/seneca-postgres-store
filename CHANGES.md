@@ -1,3 +1,6 @@
+## 2.2.0: 2016-07-27
+* Updated dependencies
+
 ## 2.1.0: 2016-06-08
 
 Updated dependencies
