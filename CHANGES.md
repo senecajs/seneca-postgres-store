@@ -1,3 +1,6 @@
+## 2.2.1 2016-08-02
+* Updated dependencies to be like Seneca ones
+
 ## 2.2.0: 2016-07-27
 * Updated dependencies
 
