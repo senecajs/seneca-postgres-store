@@ -37,8 +37,7 @@
     "build": "docker-compose build",
     "start": "docker-compose up",
     "stop": "docker-compose kill",
-    "test": "lab test -r console -v -L -t 60 $LAB_FLAGS",
-    "test:node6": "LAB_FLAGS='--leaks' && npm t",
+    "test": "lab test -r console -v -L -t 60",
     "lint": "lab -dL",
     "coverage": "lab test/*.test.js -v -r lcov | coveralls",
     "annotate": "docco lib/query-builder.js -o doc"
@@ -50,17 +49,17 @@
   },
   "devDependencies": {
     "seneca": "plugin",
-    "async": "1.5.2",
-    "lodash": "4.6.0",
-    "docco": "0.7.0",
-    "eslint-config-seneca": "1.x.x",
+    "async": "2.0.x",
+    "lodash": "4.15.0",
+    "docco": "0.7.x",
+    "eslint-config-seneca": "3.x.x",
     "eslint-plugin-hapi": "4.x.x",
-    "eslint-plugin-standard": "1.x.x",
-    "seneca-entity": "1.2.0",
+    "eslint-plugin-standard": "2.x.x",
+    "seneca-entity": "1.2.x",
     "seneca-store-test": "1.0.0",
     "seneca-store-query": "0.0.5",
-    "lab": "6.2.x",
-    "code": "1.5.0",
-    "coveralls": "2.x.x"
+    "lab": "11.0.x",
+    "code": "3.0.x",
+    "coveralls": "2.11.x"
   }
 }
