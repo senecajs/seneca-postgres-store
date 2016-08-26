@@ -159,7 +159,7 @@ This address must be inserted into the test/default_config.json file as the valu
 Copyright (c) 2012 - 2016, Marian Radulescu and other contributors.
 Licensed under [MIT][].
 
-[MIT]: ./LICENSE.txt
+[MIT]: ./LICENSE
 [npm-badge]: https://img.shields.io/npm/v/seneca-postgres-store.svg
 [npm-url]: https://npmjs.com/package/seneca-postgres-store
 [travis-badge]: https://api.travis-ci.org/senecajs/seneca-postgres-store.svg
