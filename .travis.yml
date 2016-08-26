@@ -21,4 +21,4 @@ before_script:
   - psql -U postgres -f docker/dbschema.sql
 
 after_script:
-  - npm run coverage
+  - npm run coveralls
