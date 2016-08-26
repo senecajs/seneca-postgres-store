@@ -6,12 +6,24 @@
   "author": "Marian Radulescu",
   "contributors": [
     "Peter Elger <elger.peter@gmail.com> (http://peterelger.com/)",
-    "Nicolas Herment",
-    "Cristian Ianto",
+    "Nicolas Herment (https://github.com/nherment)",
+    "Cristian Ianto (https://github.com/iantocristian)",
     "Brian Mullan",
-    "Michele Capra",
+    "Michele Capra (https://github.com/piccoloaiutante)",
     "Mircea Alexandru <mircea.alexandru@gmail.com> (http://alexandrumircea.ro/)",
-    "Mihai Dima <mihaizn@gmail.com>"
+    "Mihai Dima <mihaizn@gmail.com> (https://github.com/mihaidma)",
+    "Shane Lacey (https://github.com/shanel262)",
+    "marianr (https://github.com/marianr)",
+    "Adrien Becchis (https://github.com/AdrieanKhisbe)",
+    "Greenkeeper (https://github.com/greenkeeperio-bot)",
+    "Cristian Kiss (https://github.com/ckiss)",
+    "Emer Rutherford (https://github.com/eeswr)",
+    "Damian Beresford (https://github.com/dberesford)",
+    "Matteo Collina (https://github.com/mcollina)",
+    "Max Nachlinger (https://github.com/maxnachlinger)",
+    "David Cahill (https://github.com/david-cahill)",
+    "Hiro Asari (https://github.com/BanzaiMan)",
+    "Christian Savard (https://github.com/savardc)"
   ],
   "license": "MIT",
   "readmeFilename": "README.md",
@@ -30,8 +42,7 @@
   "files": [
     "README.md",
     "LICENSE",
-    "lib",
-    "package.json"
+    "lib"
   ],
   "scripts": {
     "build": "docker-compose build",
@@ -39,8 +50,9 @@
     "stop": "docker-compose kill",
     "test": "lab test -r console -v -L -t 60",
     "lint": "lab -dL",
-    "coverage": "lab test/*.test.js -v -r lcov | coveralls",
-    "annotate": "docco lib/query-builder.js -o doc"
+    "coveralls": "lab test/*.test.js -v -r lcov | coveralls",
+    "coverage": "lab -v -P test -L -t 80 -r html > docs/coverage.html",
+    "annotate": "docco lib/postgresql-store.js -o docs/annotated"
   },
   "dependencies": {
     "node-uuid": "1.4.7",
@@ -64,6 +76,6 @@
     "coveralls": "2.11.x"
   },
   "pre-commit": [
-  "test"
-]
+    "test"
+  ]
 }

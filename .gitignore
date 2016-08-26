@@ -15,3 +15,5 @@ npm-debug.log
 .idea/
 .settings/
 .vscode/
+docs/coverage.html
+docs/annotated
