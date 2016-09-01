@@ -39,6 +39,9 @@ Usage:
 ### Seneca compatibility
 Supports Seneca versions **1.x** - **3.x**
 
+### Supported functionality
+All Seneca data store supported functionality is implemented in [seneca-store-test](https://github.com/senecajs/seneca-store-test) as a test suite. The tests represent the store functionality specifications.
+
 ## Usage
 You don't use this module directly. It provides an underlying data storage engine for the Seneca entity API:
 
