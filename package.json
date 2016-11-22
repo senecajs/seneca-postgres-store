@@ -72,7 +72,7 @@
     "seneca-store-query": "0.0.5",
     "pre-commit": "1.1.x",
     "lab": "11.0.x",
-    "code": "3.0.x",
+    "code": "4.0.0",
     "coveralls": "2.11.x"
   },
   "pre-commit": [
