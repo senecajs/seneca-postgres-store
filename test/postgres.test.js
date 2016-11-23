@@ -9,7 +9,7 @@ var Code = require('code')
 var expect = Code.expect
 
 var Async = require('async')
-var Uuid = require('node-uuid')
+var Uuid = require('uuid')
 
 var describe = lab.describe
 var before = lab.before
