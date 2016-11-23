@@ -55,9 +55,9 @@
     "annotate": "docco lib/postgresql-store.js -o docs/annotated"
   },
   "dependencies": {
-    "node-uuid": "1.4.7",
     "pg": "5.1.0",
-    "seneca-standard-query": "0.0.5"
+    "seneca-standard-query": "0.0.5",
+    "uuid": "^3.0.0"
   },
   "devDependencies": {
     "seneca": "plugin",
