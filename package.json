@@ -71,7 +71,7 @@
     "seneca-store-test": "1.0.0",
     "seneca-store-query": "0.0.5",
     "pre-commit": "1.1.x",
-    "lab": "11.0.x",
+    "lab": "13.0.2",
     "code": "3.0.x",
     "coveralls": "2.11.x"
   },
