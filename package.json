@@ -73,7 +73,7 @@
     "pre-commit": "1.1.x",
     "lab": "11.0.x",
     "code": "3.0.x",
-    "coveralls": "2.11.x"
+    "coveralls": "2.13.1"
   },
   "pre-commit": [
     "test"
