@@ -100,6 +100,33 @@ describe('Basic Test', function () {
   })
 })
 
+describe('native$', function () {
+  before({}, function (done) {
+    si.use(require('..'), DefaultConfig)
+    si.ready(function () {
+      si.use(require('seneca-store-query'))
+      si.ready(done)
+    })
+  })
+
+  beforeEach(clearDb(si))
+  beforeEach(createEntities(si, 'foo', [{id$: 'foo1'}, {id$: 'foo2'}]))
+
+  it('should function properly', function (done) {
+    si.make('foo').native$(function (err, client) {
+      expect(client.releaseConnection).to.be.function()
+      if (err) { return done(err) }
+      client.query('select id from foo', (err, result) => {
+        if (err) { return done(err) }
+        expect(result.rows).to.exist()
+        expect(result.rows).to.equal([{id: 'foo1'}, {id: 'foo2'}])
+        client.releaseConnection()
+        done()
+      })
+    })
+  })
+})
+
 describe('postgres', function () {
   beforeEach(clearDb(si))
   beforeEach(createEntities(si, 'foo', [{

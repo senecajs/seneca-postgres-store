@@ -1,6 +1,6 @@
 {
   "name": "seneca-postgres-store",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Seneca data store plugin for PostgreSQL",
   "main": "lib/postgresql-store.js",
   "author": "Marian Radulescu",
@@ -23,7 +23,8 @@
     "Max Nachlinger (https://github.com/maxnachlinger)",
     "David Cahill (https://github.com/david-cahill)",
     "Hiro Asari (https://github.com/BanzaiMan)",
-    "Christian Savard (https://github.com/savardc)"
+    "Christian Savard (https://github.com/savardc)",
+    "Tyler Waters (https://github.com/tswaters)"
   ],
   "license": "MIT",
   "readmeFilename": "README.md",
