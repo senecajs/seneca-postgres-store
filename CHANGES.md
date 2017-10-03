@@ -1,3 +1,7 @@
+## 2.3.1 02-10-2017
+
+* Fix `native$` to include `releaseConnection` with client, for use under `seneca@3.4.x`
+
 ## 2.3.0 26-08-2016
 
 * Updated dependencies

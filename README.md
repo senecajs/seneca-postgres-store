@@ -39,6 +39,18 @@ Usage:
 ### Seneca compatibility
 Supports Seneca versions **1.x** - **3.x**
 
+#### Note on Seneca 3.4
+
+In Seneca 3.4.0, the `releaseConnection` function is no longer available as the third parameter and must be accessed from the `client` object.  If you are using this version of seneca, you'll need to update to `seneca-postgres-store@2.3.1`
+
+```js
+// seneca <= 3.3:
+entity.native$((err, client, releaseConnection) => releaseConnection())
+
+// seneca >= 3.4:
+entity.native$((err, client) => client.releaseConnection())
+```
+
 ### Supported functionality
 All Seneca data store supported functionality is implemented in [seneca-store-test](https://github.com/senecajs/seneca-store-test) as a test suite. The tests represent the store functionality specifications.
 
@@ -118,10 +130,10 @@ As with all seneca stores, you can access the native driver, in this case, the `
 Please make sure that you release the connection after using it.
 
 ```
-entity.native$( function (err, client, releaseConnection){
+entity.native$( function (err, client){
   // ... you can use client
   // ... then release connection
-  releaseConnection()
+  client.releaseConnection()
 } )
 ```
 
