@@ -48,11 +48,12 @@
     "build": "docker-compose build",
     "start": "docker-compose up",
     "stop": "docker-compose kill",
-    "test": "lab test -r console -v -L -t 60",
+    "test": "lab test -r console -v -L -t 60 -I WebAssembly",
     "lint": "lab -dL",
     "coveralls": "lab test/*.test.js -v -r lcov | coveralls",
     "coverage": "lab -v -P test -L -t 80 -r html > docs/coverage.html",
-    "annotate": "docco lib/postgresql-store.js -o docs/annotated"
+    "annotate": "docco lib/postgresql-store.js -o docs/annotated",
+    "prettier": "prettier --write --no-semi --single-quote test/*.js lib/*.js"
   },
   "dependencies": {
     "node-uuid": "1.4.7",
@@ -60,20 +61,21 @@
     "seneca-standard-query": "0.0.5"
   },
   "devDependencies": {
-    "seneca": "plugin",
     "async": "2.0.x",
-    "lodash": "4.15.0",
+    "code": "3.0.x",
+    "coveralls": "2.11.x",
     "docco": "0.7.x",
     "eslint-config-seneca": "3.x.x",
     "eslint-plugin-hapi": "4.x.x",
     "eslint-plugin-standard": "2.x.x",
-    "seneca-entity": "1.3.x",
-    "seneca-store-test": "1.0.0",
-    "seneca-store-query": "0.0.5",
-    "pre-commit": "1.1.x",
     "lab": "11.0.x",
-    "code": "3.0.x",
-    "coveralls": "2.11.x"
+    "lodash": "4.15.0",
+    "pre-commit": "1.1.x",
+    "prettier": "^1.9.2",
+    "seneca": "plugin",
+    "seneca-entity": "1.3.x",
+    "seneca-store-query": "0.0.5",
+    "seneca-store-test": "1.0.0"
   },
   "pre-commit": [
     "test"
