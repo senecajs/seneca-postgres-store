@@ -15,7 +15,8 @@ CREATE TABLE foo
   id character varying PRIMARY KEY,
   p1 character varying,
   p2 character varying,
-  p3 json,
+  p3 character varying,
+  int_arr integer[],
   "fooBar" character varying,
   bar_foo character varying
 );
