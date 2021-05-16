@@ -71,6 +71,6 @@
     "lodash": "4.15.0",
     "seneca": "3.23.3",
     "seneca-entity": "13.0.0",
-    "seneca-store-test": "file:../seneca-store-test"
+    "seneca-store-test": "3.2.0"
   }
 }
