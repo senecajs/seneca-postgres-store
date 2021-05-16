@@ -31,6 +31,7 @@ describe('seneca postgres plugin', () => {
     describe('basic tests', () => {
       Shared.basictest({
         seneca: si,
+        senecaMerge: makeSenecaForTest({ postgres_opts: { merge: false } }),
         script: lab
       })
     })
@@ -749,9 +750,7 @@ describe('seneca postgres plugin', () => {
 })
 
 function makeSenecaForTest(opts = {}) {
-  const si = Seneca({
-    log: 'test'
-  })
+  const si = Seneca({ log: 'test' })
 
   si.use('seneca-entity', { mem_store: false })
 
