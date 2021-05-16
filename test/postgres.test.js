@@ -82,7 +82,7 @@ describe('seneca postgres plugin', () => {
     }]))
 
     it('save with passing an external id', () => new Promise((resolve, reject) => {
-      var idPrefix = 'test_'
+      var idPrefix = 'test_' + Uuid()
 
       si.add({role: 'sql', hook: 'generate_id', target: POSTGRES_STORE_NAME}, function (args, done) {
         return done(null, {id: idPrefix + Uuid()})
