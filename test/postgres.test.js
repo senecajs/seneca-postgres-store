@@ -1,7 +1,7 @@
 const Seneca = require('seneca')
 const Lab = require('@hapi/lab')
 const lab = (exports.lab = Lab.script())
-const { before, beforeEach, describe, it } = lab
+const { before, beforeEach, afterEach, describe, it } = lab
 const { expect } = require('code')
 
 const PgStore = require('..')
@@ -160,7 +160,11 @@ describe('seneca postgres plugin', () => {
       })
     })
 
-    before(() => new Promise((resolve, reject) => {
+    beforeEach(clearDb(si))
+
+    afterEach(clearDb(si))
+
+    beforeEach(() => new Promise((resolve, reject) => {
       var Product = si.make('product')
 
       return Async.series(
@@ -769,7 +773,11 @@ function clearDb(si) {
 
       function clearBar(next) {
         si.make('zen', 'moon', 'bar').remove$({ all$: true }, next)
-      }
+      },
+
+      function clearProduct(next) {
+        si.make('product').remove$({ all$: true }, next)
+      },
     ], done)
   })
 }
