@@ -57,8 +57,7 @@
   },
   "dependencies": {
     "node-uuid": "1.4.7",
-    "pg": "5.1.0",
-    "seneca-standard-query": "file:../seneca-standard-query"
+    "pg": "5.1.0"
   },
   "devDependencies": {
     "@hapi/lab": "24.0.0",
@@ -72,7 +71,6 @@
     "lodash": "4.15.0",
     "seneca": "3.23.3",
     "seneca-entity": "13.0.0",
-    "seneca-store-query": "0.0.5",
     "seneca-store-test": "file:../seneca-store-test"
   }
 }

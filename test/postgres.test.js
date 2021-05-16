@@ -21,10 +21,7 @@ describe('seneca postgres plugin', () => {
 
     before(() => {
       return new Promise(done => {
-        si.ready(() => {
-          si.use(require('seneca-store-query'))
-          si.ready(done)
-        })
+        si.ready(done)
       })
     })
 
@@ -63,10 +60,7 @@ describe('seneca postgres plugin', () => {
 
     before(() => {
       return new Promise(done => {
-        si.ready(() => {
-          si.use(require('seneca-store-query'))
-          si.ready(done)
-        })
+        si.ready(done)
       })
     })
 
@@ -153,10 +147,7 @@ describe('seneca postgres plugin', () => {
 
     before(() => {
       return new Promise(done => {
-        si.ready(() => {
-          si.use(require('seneca-store-query'))
-          si.ready(done)
-        })
+        si.ready(done)
       })
     })
 
@@ -632,10 +623,7 @@ describe('seneca postgres plugin', () => {
 
       before(() => {
         return new Promise(done => {
-          si.ready(() => {
-            si.use(require('seneca-store-query'))
-            si.ready(done)
-          })
+          si.ready(done)
         })
       })
 
@@ -695,10 +683,7 @@ describe('seneca postgres plugin', () => {
 
       before(() => {
         return new Promise(done => {
-          si.ready(() => {
-            si.use(require('seneca-store-query'))
-            si.ready(done)
-          })
+          si.ready(done)
         })
       })
 
