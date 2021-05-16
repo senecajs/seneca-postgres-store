@@ -165,7 +165,7 @@ describe('seneca postgres plugin', () => {
     afterEach(clearDb(si))
 
     beforeEach(() => new Promise((resolve, reject) => {
-      var Product = si.make('product')
+      var Product = si.make('products')
 
       return Async.series(
         [
@@ -175,9 +175,9 @@ describe('seneca postgres plugin', () => {
 
           function create(next) {
             var products = [
-              Product.make$({name: 'apple', price: 100}),
-              Product.make$({name: 'pear', price: 200}),
-              Product.make$({name: 'cherry', price: 300})
+              Product.make$({label: 'apple', price: '100'}),
+              Product.make$({label: 'pear', price: '200'}),
+              Product.make$({label: 'cherry', price: '300'})
             ]
 
             function saveproduct(product, next) {
@@ -199,17 +199,17 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use not equal ne$', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({price: {ne$: 200}, sort$: {price: 1}}, function (err, lst) {
+      return product.list$({price: {ne$: '200'}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return reject(err)
         }
 
         try {
           expect(2).to.equal(lst.length)
-          expect('apple').to.equal(lst[0].name)
-          expect('cherry').to.equal(lst[1].name)
+          expect('apple').to.equal(lst[0].label)
+          expect('cherry').to.equal(lst[1].label)
         } catch (err) {
           return reject(err)
         }
@@ -219,17 +219,17 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use not equal ne$ string', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({name: {ne$: 'pear'}, sort$: {price: 1}}, function (err, lst) {
+      return product.list$({label: {ne$: 'pear'}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return reject(err)
         }
 
         try {
           expect(2).to.equal(lst.length)
-          expect('apple').to.equal(lst[0].name)
-          expect('cherry').to.equal(lst[1].name)
+          expect('apple').to.equal(lst[0].label)
+          expect('cherry').to.equal(lst[1].label)
         } catch (err) {
           return reject(err)
         }
@@ -239,16 +239,16 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use eq$', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({price: {eq$: 200}}, function (err, lst) {
+      return product.list$({price: {eq$: '200'}}, function (err, lst) {
         if (err) {
           return reject(err)
         }
 
         try {
           expect(1).to.equal(lst.length)
-          expect('pear').to.equal(lst[0].name)
+          expect('pear').to.equal(lst[0].label)
         } catch (err) {
           return reject(err)
         }
@@ -258,16 +258,16 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use eq$ string', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({name: {eq$: 'pear'}}, function (err, lst) {
+      return product.list$({label: {eq$: 'pear'}}, function (err, lst) {
         if (err) {
           return reject(err)
         }
 
         try {
           expect(1).to.equal(lst.length)
-          expect('pear').to.equal(lst[0].name)
+          expect('pear').to.equal(lst[0].label)
         } catch (err) {
           return reject(err)
         }
@@ -277,17 +277,17 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use gte$', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({price: {gte$: 200}, sort$: {price: 1}}, function (err, lst) {
+      return product.list$({price: {gte$: '200'}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return reject(err)
         }
 
         try {
           expect(2).to.equal(lst.length)
-          expect('pear').to.equal(lst[0].name)
-          expect('cherry').to.equal(lst[1].name)
+          expect('pear').to.equal(lst[0].label)
+          expect('cherry').to.equal(lst[1].label)
         } catch (err) {
           return reject(err)
         }
@@ -297,16 +297,16 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use gt$', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({price: {gt$: 200}, sort$: {price: 1}}, function (err, lst) {
+      return product.list$({price: {gt$: '200'}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return reject(err)
         }
 
         try {
           expect(1).to.equal(lst.length)
-          expect('cherry').to.equal(lst[0].name)
+          expect('cherry').to.equal(lst[0].label)
         } catch (err) {
           return reject(err)
         }
@@ -316,17 +316,17 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use lte$', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({price: {lte$: 200}, sort$: {price: 1}}, function (err, lst) {
+      return product.list$({price: {lte$: '200'}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return reject(err)
         }
 
         try {
           expect(2).to.equal(lst.length)
-          expect('apple').to.equal(lst[0].name)
-          expect('pear').to.equal(lst[1].name)
+          expect('apple').to.equal(lst[0].label)
+          expect('pear').to.equal(lst[1].label)
         } catch (err) {
           return reject(err)
         }
@@ -336,16 +336,16 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use lt$', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({price: {lt$: 200}, sort$: {price: 1}}, function (err, lst) {
+      return product.list$({price: {lt$: '200'}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return reject(err)
         }
 
         try {
           expect(1).to.equal(lst.length)
-          expect('apple').to.equal(lst[0].name)
+          expect('apple').to.equal(lst[0].label)
         } catch (err) {
           return reject(err)
         }
@@ -355,17 +355,17 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use in$', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({price: {in$: [200, 300]}, sort$: {price: 1}}, function (err, lst) {
+      return product.list$({price: {in$: ['200', '300']}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return reject(err)
         }
 
         try {
           expect(2).to.equal(lst.length)
-          expect('pear').to.equal(lst[0].name)
-          expect('cherry').to.equal(lst[1].name)
+          expect('pear').to.equal(lst[0].label)
+          expect('cherry').to.equal(lst[1].label)
         } catch (err) {
           return reject(err)
         }
@@ -375,17 +375,17 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use in$ string', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({name: {in$: ['cherry', 'pear']}, sort$: {price: 1}}, function (err, lst) {
+      return product.list$({label: {in$: ['cherry', 'pear']}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return reject(err)
         }
 
         try {
           expect(2).to.equal(lst.length)
-          expect('pear').to.equal(lst[0].name)
-          expect('cherry').to.equal(lst[1].name)
+          expect('pear').to.equal(lst[0].label)
+          expect('cherry').to.equal(lst[1].label)
         } catch (err) {
           return reject(err)
         }
@@ -395,16 +395,16 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use in$ one matching', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({price: {in$: [200, 500, 700]}, sort$: {price: 1}}, function (err, lst) {
+      return product.list$({price: {in$: ['200', '500', '700']}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return reject(err)
         }
 
         try {
           expect(1).to.equal(lst.length)
-          expect('pear').to.equal(lst[0].name)
+          expect('pear').to.equal(lst[0].label)
         } catch (err) {
           return reject(err)
         }
@@ -414,9 +414,9 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use in$ no matching', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({price: {in$: [250, 500, 700]}, sort$: {price: 1}}, function (err, lst) {
+      return product.list$({price: {in$: ['250', '500', '700']}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return reject(err)
         }
@@ -433,9 +433,9 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use nin$ three matching', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({price: {nin$: [250, 500, 700]}, sort$: {price: 1}}, function (err, lst) {
+      return product.list$({price: {nin$: ['250', '500', '700']}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return(err)
         }
@@ -451,16 +451,16 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use nin$ one matching', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({price: {nin$: [200, 500, 300]}, sort$: {price: 1}}, function (err, lst) {
+      return product.list$({price: {nin$: ['200', '500', '300']}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return(err)
         }
 
         try {
           expect(1).to.equal(lst.length)
-          expect('apple').to.equal(lst[0].name)
+          expect('apple').to.equal(lst[0].label)
         } catch (err) {
           return reject(err)
         }
@@ -470,11 +470,11 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use complex in$ and nin$', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
       return product.list$({
-        price: {nin$: [250, 500, 300],
-          in$: [200, 300]
+        price: {nin$: ['250', '500', '300'],
+          in$: ['200', '300']
         },
         sort$: {price: 1}
       }, function (err, lst) {
@@ -484,7 +484,7 @@ describe('seneca postgres plugin', () => {
 
         try {
           expect(1).to.equal(lst.length)
-          expect('pear').to.equal(lst[0].name)
+          expect('pear').to.equal(lst[0].label)
         } catch (err) {
           return reject(err)
         }
@@ -494,16 +494,16 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use nin$ string', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({name: {nin$: ['cherry', 'pear']}, sort$: {price: 1}}, function (err, lst) {
+      return product.list$({label: {nin$: ['cherry', 'pear']}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return(err)
         }
 
         try {
           expect(1).to.equal(lst.length)
-          expect('apple').to.equal(lst[0].name)
+          expect('apple').to.equal(lst[0].label)
         } catch (err) {
           return reject(err)
         }
@@ -513,17 +513,17 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use or$', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({or$: [{name: 'cherry'}, {price: 200}], sort$: {price: 1}}, function (err, lst) {
+      return product.list$({or$: [{label: 'cherry'}, {price: '200'}], sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return(err)
         }
 
         try {
           expect(2).to.equal(lst.length)
-          expect('pear').to.equal(lst[0].name)
-          expect('cherry').to.equal(lst[1].name)
+          expect('pear').to.equal(lst[0].label)
+          expect('cherry').to.equal(lst[1].label)
         } catch (err) {
           return reject(err)
         }
@@ -533,16 +533,16 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use and$', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
-      return product.list$({and$: [{name: 'cherry'}, {price: 300}], sort$: {price: 1}}, function (err, lst) {
+      return product.list$({and$: [{label: 'cherry'}, {price: '300'}], sort$: {price: 1}}, function (err, lst) {
         if (err) {
           return reject(err)
         }
 
         try {
           expect(1).to.equal(lst.length)
-          expect('cherry').to.equal(lst[0].name)
+          expect('cherry').to.equal(lst[0].label)
         } catch (err) {
           return reject(err)
         }
@@ -552,10 +552,10 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use and$ & or$', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
       return product.list$({
-        or$: [{price: {gte$: 200}}, {and$: [{name: 'cherry'}, {price: 300}]}],
+        or$: [{price: {gte$: '200'}}, {and$: [{label: 'cherry'}, {price: '300'}]}],
         sort$: {price: 1}
       }, function (err, lst) {
         if (err) {
@@ -564,8 +564,8 @@ describe('seneca postgres plugin', () => {
 
         try {
           expect(2).to.equal(lst.length)
-          expect('pear').to.equal(lst[0].name)
-          expect('cherry').to.equal(lst[1].name)
+          expect('pear').to.equal(lst[0].label)
+          expect('cherry').to.equal(lst[1].label)
         } catch (err) {
           return reject(err)
         }
@@ -575,13 +575,13 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use and$ & or$ and limit$', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
       return product.list$({
-        or$: [{price: {gte$: 200}}, {and$: [{name: 'cherry'}, {price: 300}]}],
+        or$: [{price: {gte$: '200'}}, {and$: [{label: 'cherry'}, {price: '300'}]}],
         sort$: {price: 1},
         limit$: 1,
-        fields$: ['name']
+        fields$: ['label']
       }, function (err, lst) {
         if (err) {
           return reject(err)
@@ -589,7 +589,7 @@ describe('seneca postgres plugin', () => {
 
         try {
           expect(1).to.equal(lst.length)
-          expect('pear').to.equal(lst[0].name)
+          expect('pear').to.equal(lst[0].label)
           expect(lst[0].price).to.not.exist()
         } catch (err) {
           return reject(err)
@@ -600,13 +600,13 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use and$ & or$ and limit$, fields$ and skip$', () => new Promise((resolve, reject) => {
-      var product = si.make('product')
+      var product = si.make('products')
 
       return product.list$({
-        price: {gte$: 200},
+        price: {gte$: '200'},
         sort$: {price: 1},
         limit$: 1,
-        fields$: ['name'],
+        fields$: ['label'],
         skip$: 1
       }, function (err, lst) {
         if (err) {
@@ -615,7 +615,7 @@ describe('seneca postgres plugin', () => {
 
         try {
           expect(1).to.equal(lst.length)
-          expect('cherry').to.equal(lst[0].name)
+          expect('cherry').to.equal(lst[0].label)
           expect(lst[0].price).to.not.exist()
         } catch (err) {
           return reject(err)
@@ -776,7 +776,7 @@ function clearDb(si) {
       },
 
       function clearProduct(next) {
-        si.make('product').remove$({ all$: true }, next)
+        si.make('products').remove$({ all$: true }, next)
       },
     ], done)
   })

@@ -38,10 +38,52 @@ CREATE TABLE moon_bar
 );
 ALTER TABLE moon_bar OWNER TO senecatest;
 
-CREATE TABLE product
+CREATE TABLE products
 (
-  name character varying,
   id character varying PRIMARY KEY,
-  price integer
+  price decimal not null,
+  label character varying default null,
+  coolness_factor integer default null,
+  unique(label),
+  unique(label, price)
 );
-ALTER TABLE product OWNER TO senecatest;
+ALTER TABLE products OWNER TO senecatest;
+
+CREATE TABLE players
+(
+  id character varying PRIMARY KEY,
+  username character varying not null,
+  favorite_car character varying not null,
+  unique(username)
+);
+ALTER TABLE players OWNER TO senecatest;
+
+CREATE TABLE racers
+(
+  id character varying PRIMARY KEY,
+  points integer not null default 0,
+  username character varying not null,
+  favorite_car character varying not null,
+  unique(username)
+);
+ALTER TABLE racers OWNER TO senecatest;
+
+CREATE TABLE users
+(
+  id character varying PRIMARY KEY,
+  username character varying not null,
+  email character varying not null,
+  unique(email)
+);
+ALTER TABLE users OWNER TO senecatest;
+
+CREATE TABLE customers
+(
+  id character varying PRIMARY KEY,
+  first_name character varying not null,
+  last_name character varying not null,
+  credits integer not null,
+  unique(first_name, last_name)
+);
+ALTER TABLE customers OWNER TO senecatest;
+
