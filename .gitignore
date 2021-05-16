@@ -17,3 +17,4 @@ npm-debug.log
 .vscode/
 docs/coverage.html
 docs/annotated
+package-lock.json
