@@ -53,7 +53,9 @@ CREATE TABLE players
 (
   id character varying PRIMARY KEY,
   username character varying not null,
-  favorite_car character varying not null,
+  favorite_car character varying default null,
+  points integer default null,
+  points_history integer[] default null,
   unique(username)
 );
 ALTER TABLE players OWNER TO senecatest;
