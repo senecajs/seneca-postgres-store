@@ -622,6 +622,84 @@ describe('seneca postgres plugin', () => {
         return resolve()
       })
     }))
+
+    describe('#save$', () => {
+      describe('auto_increment$:true', () => {
+        describe('normally', () => {
+          it('relies on the database to generate the id', () => new Promise((resolve, reject) => {
+            si.make('auto_incrementors')
+              .data$({ value: 37 })
+              .save$({ auto_increment$: true }, function (err, ent) {
+                if (err) {
+                  return reject(err)
+                }
+
+                try {
+                  expect(ent).to.exist()
+                  expect(typeof ent.id).to.equal('number')
+                  expect(ent.value).to.equal(37)
+                } catch (err) {
+                  return reject(err)
+                }
+
+                return si.make('auto_incrementors').load$(ent.id, function (err, ent) {
+                  if (err) {
+                    return reject(err)
+                  }
+
+                  try {
+                    expect(ent).to.exist()
+                    expect(typeof ent.id).to.equal('number')
+                    expect(ent.value).to.equal(37)
+                  } catch (err) {
+                    return reject(err)
+                  }
+
+                  return resolve()
+                })
+              })
+          }))
+        })
+
+        describe('when upserting', () => {
+          describe('no match exists', () => {
+            it('relies on the database to generate the id', () => new Promise((resolve, reject) => {
+              si.make('auto_incrementors')
+                .data$({ value: 37 })
+                .save$({ auto_increment$: true, upsert$: ['value'] }, function (err, ent) {
+                  if (err) {
+                    return reject(err)
+                  }
+
+                  try {
+                    expect(ent).to.exist()
+                    expect(typeof ent.id).to.equal('number')
+                    expect(ent.value).to.equal(37)
+                  } catch (err) {
+                    return reject(err)
+                  }
+
+                  return si.make('auto_incrementors').load$(ent.id, function (err, ent) {
+                    if (err) {
+                      return reject(err)
+                    }
+
+                    try {
+                      expect(ent).to.exist()
+                      expect(typeof ent.id).to.equal('number')
+                      expect(ent.value).to.equal(37)
+                    } catch (err) {
+                      return reject(err)
+                    }
+
+                    return resolve()
+                  })
+                })
+            }))
+          })
+        })
+      })
+    })
   })
 
   describe('Column Names conversions', function () {
@@ -770,6 +848,10 @@ function clearDb(si) {
       function clearProduct(next) {
         si.make('products').remove$({ all$: true }, next)
       },
+
+      function clearAutoIncrementors(next) {
+        si.make('auto_incrementors').remove$({ all$: true }, next)
+      }
     ], done)
   })
 }

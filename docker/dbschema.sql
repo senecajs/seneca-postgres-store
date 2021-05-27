@@ -38,6 +38,14 @@ CREATE TABLE moon_bar
 );
 ALTER TABLE moon_bar OWNER TO senecatest;
 
+CREATE TABLE auto_incrementors
+(
+  id SERIAL PRIMARY KEY,
+  value integer not null,
+  unique(value)
+);
+ALTER TABLE auto_incrementors OWNER TO senecatest;
+
 CREATE TABLE products
 (
   id character varying PRIMARY KEY,
