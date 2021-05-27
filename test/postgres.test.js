@@ -40,15 +40,22 @@ describe('seneca postgres plugin', () => {
       })
     })
 
-    describe('sort tests', () => {
+    describe('limit tests', () => {
       Shared.limitstest({
         seneca: si,
         script: lab
       })
     })
 
-    describe('sort tests', () => {
+    describe('sql tests', () => {
       Shared.sqltest({
+        seneca: si,
+        script: lab
+      })
+    })
+
+    describe('upsert tests', () => {
+      Shared.upserttest({
         seneca: si,
         script: lab
       })
