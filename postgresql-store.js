@@ -140,92 +140,84 @@ module.exports = function (opts) {
       var q = args.q
       var autoIncrement = q.auto_increment$ || false
 
-      return getSchema(ent, sTypes, function (err, schema) {
+      if (isUpdate(ent)) {
+        return updateEnt(ent, sTypes, opts, function (err, res) {
+          if (err) {
+            seneca.log.error('save/update', 'Error while updating the entity:', err)
+            return done(err)
+          }
+
+          var updatedAnything = res.rowCount > 0
+
+          if (!updatedAnything) {
+            return insertEnt(ent, sTypes, function (err, res) {
+              if (err) {
+                seneca.log.error('save/insert', 'Error while inserting the entity:', err)
+                return done(err)
+              }
+
+              seneca.log.debug('save/insert', res)
+
+              return done(null, res)
+            })
+          }
+
+          return findEnt(ent, { id: ent.id }, sTypes, function (err, res) {
+            if (err) {
+              seneca.log.error('save/update', 'Error while fetching the updated entity:', err)
+              return done(err)
+            }
+
+            seneca.log.debug('save/update', res)
+
+            return done(null, res)
+          })
+        })
+      }
+
+
+      return generateId(seneca, name, function (err, generatedId) {
         if (err) {
-          seneca.log.error('save', 'Error while pulling the schema:', err)
+          seneca.log.error('save/insert', 'Error while generating an id for the entity:', err)
           return done(err)
         }
 
 
-        if (isUpdate(ent)) {
-          return updateEnt(ent, sTypes, schema, opts, function (err, res) {
+        var newId = null == ent.id$
+          ? generatedId
+          : ent.id$
+
+
+        var newEnt = ent.clone$()
+
+        if (!autoIncrement) {
+          newEnt.id = newId
+        }
+
+
+        if (isUpsert(ent, q)) {
+          return upsertEnt(newEnt, q, sTypes, function (err, res) {
             if (err) {
-              seneca.log.error('save/update', 'Error while updating the entity:', err)
+              seneca.log.error('save/upsert', 'Error while inserting the entity:', err)
               return done(err)
             }
 
-            var updatedAnything = res.rowCount > 0
+            seneca.log.debug('save/upsert', res)
 
-            if (!updatedAnything) {
-              return insertEnt(ent, sTypes, function (err, res) {
-                if (err) {
-                  seneca.log.error('save/insert', 'Error while inserting the entity:', err)
-                  return done(err)
-                }
-
-                seneca.log.debug('save/insert', res)
-
-                return done(null, res)
-              })
-            }
-
-            return findEnt(ent, { id: ent.id }, sTypes, function (err, res) {
-              if (err) {
-                seneca.log.error('save/update', 'Error while fetching the updated entity:', err)
-                return done(err)
-              }
-
-              seneca.log.debug('save/update', res)
-
-              return done(null, res)
-            })
+            return done(null, res)
           })
         }
 
 
-        return generateId(seneca, name, function (err, generatedId) {
+        return insertEnt(newEnt, sTypes, function (err, res) {
           if (err) {
-            seneca.log.error('save/insert', 'Error while generating an id for the entity:', err)
+            seneca.log.error('save/insert', 'Error while inserting the entity:', err)
             return done(err)
           }
 
+          seneca.log.debug('save/insert', res)
 
-          var newId = null == ent.id$
-            ? generatedId
-            : ent.id$
-
-
-          var newEnt = ent.clone$()
-
-          if (!autoIncrement) {
-            newEnt.id = newId
-          }
-
-
-          if (isUpsert(ent, q)) {
-            return upsertEnt(newEnt, q, sTypes, function (err, res) {
-              if (err) {
-                seneca.log.error('save/upsert', 'Error while inserting the entity:', err)
-                return done(err)
-              }
-
-              seneca.log.debug('save/upsert', res)
-
-              return done(null, res)
-            })
-          }
-
-
-          return insertEnt(newEnt, sTypes, function (err, res) {
-            if (err) {
-              seneca.log.error('save/insert', 'Error while inserting the entity:', err)
-              return done(err)
-            }
-
-            seneca.log.debug('save/insert', res)
-
-            return done(null, res)
-          })
+          return done(null, res)
         })
       })
 
@@ -377,20 +369,6 @@ module.exports = function (opts) {
     }
   }
 
-  function getSchema(ent, sTypes, done) {
-    var query = QueryBuilder.schemastm(ent, sTypes)
-
-    return execQuery(query, function (err, res) {
-      if (err) {
-        return done(err)
-      }
-
-      var schema = res.rows
-
-      return done(null, schema)
-    })
-  }
-
   function specificTypes(storeName) {
     var sTypes = {
       escape: '"',
@@ -404,18 +382,6 @@ module.exports = function (opts) {
     }
 
     return sTypes
-  }
-
-  function shouldMerge(ent, plugin_opts) {
-    if ('merge$' in ent) {
-      return Boolean(ent.merge$)
-    }
-
-    if (plugin_opts && ('merge' in plugin_opts)) {
-      return Boolean(plugin_opts.merge)
-    }
-
-    return true
   }
 
   function generateId(seneca, target, done) {
@@ -517,10 +483,9 @@ module.exports = function (opts) {
 
 
 
-  function updateEnt(ent, sTypes, schema, opts, done) {
+  function updateEnt(ent, sTypes, opts, done) {
     try {
-      var merge = shouldMerge(ent, opts)
-      var query = QueryBuilder.updatestm(ent, sTypes, schema, { merge })
+      var query = QueryBuilder.updatestm(ent, sTypes)
 
       return execQuery(query, done)
     } catch (err) {
