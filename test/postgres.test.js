@@ -9,7 +9,7 @@ const DefaultPgConfig = require('./default_config.json')
 const Shared = require('seneca-store-test')
 
 const Async = require('async')
-const Uuid = require('node-uuid')
+const Uuid = require('uuid')
 const Util = require('util')
 
 const POSTGRES_STORE_NAME = 'postgresql-store'

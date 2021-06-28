@@ -2,9 +2,10 @@
 
 var _ = require('lodash')
 var Pg = require('pg')
-var Uuid = require('node-uuid')
-var storeName = 'postgresql-store'
-var actionRole = 'sql'
+var Uuid = require('uuid')
+
+var STORE_NAME = 'postgresql-store'
+var ACTION_ROLE = 'sql'
 
 var RelationalStore = require('./lib/relational-util')
 
@@ -36,7 +37,7 @@ module.exports = function (opts) {
         query: query
       }
       seneca.log.error('Query Failed', JSON.stringify(errorDetails, null, 1))
-      // next ({code: 'entity/error', store: storeName})
+      // next ({code: 'entity/error', store: STORE_NAME})
 
       if ('ECONNREFUSED' === err.code || 'notConnected' === err.message || 'Error: no open connections' === err) {
         minwait = opts.minwait
@@ -124,7 +125,7 @@ module.exports = function (opts) {
 
 
   var store = {
-    name: storeName,
+    name: STORE_NAME,
 
     close: function (args, done) {
       Pg.end()
@@ -175,7 +176,7 @@ module.exports = function (opts) {
       }
 
 
-      return generateId(seneca, storeName, function (err, generatedId) {
+      return generateId(seneca, STORE_NAME, function (err, generatedId) {
         if (err) {
           seneca.log.error('save/insert', 'Error while generating an id for the entity:', err)
           return done(err)
@@ -315,7 +316,7 @@ module.exports = function (opts) {
     })
   })
 
-  seneca.add({role: actionRole, hook: 'generate_id', target: store.name}, function (args, done) {
+  seneca.add({role: ACTION_ROLE, hook: 'generate_id', target: store.name}, function (args, done) {
     return done(null, {id: Uuid()})
   })
 
@@ -366,7 +367,7 @@ module.exports = function (opts) {
   }
 
   function generateId(seneca, target, done) {
-    return seneca.act({ role: actionRole, hook: 'generate_id', target: target }, function (err, res) {
+    return seneca.act({ role: ACTION_ROLE, hook: 'generate_id', target: target }, function (err, res) {
       if (err) {
         return done(err)
       }

@@ -56,12 +56,12 @@
     "annotate": "docco lib/postgresql-store.js -o docs/annotated"
   },
   "dependencies": {
-    "node-uuid": "1.4.7",
-    "pg": "5.1.0"
+    "pg": "5.1.0",
+    "uuid": "3.4.0"
   },
   "devDependencies": {
-    "@hapi/lab": "24.0.0",
     "@hapi/code": "8.0.3",
+    "@hapi/lab": "24.0.0",
     "async": "2.0.x",
     "code": "3.0.x",
     "coveralls": "2.11.x",
