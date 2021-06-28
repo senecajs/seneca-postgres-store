@@ -3,7 +3,7 @@
 var _ = require('lodash')
 var Pg = require('pg')
 var Uuid = require('node-uuid')
-var name = 'postgresql-store'
+var storeName = 'postgresql-store'
 var actionRole = 'sql'
 
 var RelationalStore = require('./lib/relational-util')
@@ -36,7 +36,7 @@ module.exports = function (opts) {
         query: query
       }
       seneca.log.error('Query Failed', JSON.stringify(errorDetails, null, 1))
-      // next ({code: 'entity/error', store: name})
+      // next ({code: 'entity/error', store: storeName})
 
       if ('ECONNREFUSED' === err.code || 'notConnected' === err.message || 'Error: no open connections' === err) {
         minwait = opts.minwait
@@ -124,7 +124,7 @@ module.exports = function (opts) {
 
 
   var store = {
-    name: name,
+    name: storeName,
 
     close: function (args, done) {
       Pg.end()
@@ -135,7 +135,7 @@ module.exports = function (opts) {
       var seneca = this
 
       var ent = args.ent
-      var sTypes = specificTypes(name)
+      var sTypes = specificTypes(storeName)
 
       var q = args.q
       var autoIncrement = q.auto_increment$ || false
@@ -176,7 +176,7 @@ module.exports = function (opts) {
       }
 
 
-      return generateId(seneca, name, function (err, generatedId) {
+      return generateId(seneca, storeName, function (err, generatedId) {
         if (err) {
           seneca.log.error('save/insert', 'Error while generating an id for the entity:', err)
           return done(err)
@@ -370,18 +370,10 @@ module.exports = function (opts) {
   }
 
   function specificTypes(storeName) {
-    var sTypes = {
+    return {
       escape: '"',
       prepared: '$'
     }
-    sTypes.name = storeName
-
-    if (storeName === 'mysql-store') {
-      sTypes.escape = '`'
-      sTypes.prepared = '?'
-    }
-
-    return sTypes
   }
 
   function generateId(seneca, target, done) {
