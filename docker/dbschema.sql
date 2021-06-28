@@ -16,6 +16,8 @@ CREATE TABLE foo
   p1 character varying,
   p2 character varying,
   p3 character varying,
+  x int,
+  y int,
   int_arr integer[],
   "fooBar" character varying,
   bar_foo character varying

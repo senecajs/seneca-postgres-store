@@ -61,6 +61,7 @@
   },
   "devDependencies": {
     "@hapi/lab": "24.0.0",
+    "@hapi/code": "8.0.3",
     "async": "2.0.x",
     "code": "3.0.x",
     "coveralls": "2.11.x",
@@ -71,6 +72,6 @@
     "lodash": "4.15.0",
     "seneca": "3.23.3",
     "seneca-entity": "13.0.0",
-    "seneca-store-test": "3.2.0"
+    "seneca-store-test": "4.0.0"
   }
 }
