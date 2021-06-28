@@ -4,5 +4,5 @@
   "port": 5432,
   "username": "senecatest",
   "password": "senecatest",
-  "options": { }
+  "options": {}
 }

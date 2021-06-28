@@ -1,15 +1,3 @@
---
--- run with psql -U postgres -f dbschema.sql
---
-DROP DATABASE IF EXISTS senecatest;
-CREATE DATABASE senecatest WITH ENCODING='UTF8' CONNECTION LIMIT=-1;
-
--- DROP ROLE senecatest;
-CREATE ROLE "senecatest" LOGIN PASSWORD 'senecatest';
-
---# connect to the database (works for psql)
-\c senecatest
-
 CREATE TABLE foo
 (
   id character varying PRIMARY KEY,
@@ -20,10 +8,9 @@ CREATE TABLE foo
   y int,
   int_arr integer[],
   "fooBar" character varying,
-  bar_foo character varying
+  bar_foo character varying,
+  unique(x)
 );
-
-ALTER TABLE foo OWNER TO senecatest;
 
 CREATE TABLE moon_bar
 (
@@ -38,7 +25,6 @@ CREATE TABLE moon_bar
   obj json,
   seneca text
 );
-ALTER TABLE moon_bar OWNER TO senecatest;
 
 CREATE TABLE auto_incrementors
 (
@@ -46,7 +32,6 @@ CREATE TABLE auto_incrementors
   value integer not null,
   unique(value)
 );
-ALTER TABLE auto_incrementors OWNER TO senecatest;
 
 CREATE TABLE products
 (
@@ -57,7 +42,6 @@ CREATE TABLE products
   unique(label),
   unique(label, price)
 );
-ALTER TABLE products OWNER TO senecatest;
 
 CREATE TABLE players
 (
@@ -68,7 +52,6 @@ CREATE TABLE players
   points_history integer[] default null,
   unique(username)
 );
-ALTER TABLE players OWNER TO senecatest;
 
 CREATE TABLE racers
 (
@@ -78,7 +61,6 @@ CREATE TABLE racers
   favorite_car character varying not null,
   unique(username)
 );
-ALTER TABLE racers OWNER TO senecatest;
 
 CREATE TABLE users
 (
@@ -87,7 +69,6 @@ CREATE TABLE users
   email character varying not null,
   unique(email)
 );
-ALTER TABLE users OWNER TO senecatest;
 
 CREATE TABLE customers
 (
@@ -97,5 +78,4 @@ CREATE TABLE customers
   credits integer not null,
   unique(first_name, last_name)
 );
-ALTER TABLE customers OWNER TO senecatest;
 
