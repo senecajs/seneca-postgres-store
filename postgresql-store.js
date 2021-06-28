@@ -135,13 +135,12 @@ module.exports = function (opts) {
       var seneca = this
 
       var ent = args.ent
-      var sTypes = specificTypes(storeName)
 
       var q = args.q
       var autoIncrement = q.auto_increment$ || false
 
       if (isUpdate(ent)) {
-        return updateEnt(ent, sTypes, opts, function (err, res) {
+        return updateEnt(ent, opts, function (err, res) {
           if (err) {
             seneca.log.error('save/update', 'Error while updating the entity:', err)
             return done(err)
@@ -150,7 +149,7 @@ module.exports = function (opts) {
           var updatedAnything = res.rowCount > 0
 
           if (!updatedAnything) {
-            return insertEnt(ent, sTypes, function (err, res) {
+            return insertEnt(ent, function (err, res) {
               if (err) {
                 seneca.log.error('save/insert', 'Error while inserting the entity:', err)
                 return done(err)
@@ -162,7 +161,7 @@ module.exports = function (opts) {
             })
           }
 
-          return findEnt(ent, { id: ent.id }, sTypes, function (err, res) {
+          return findEnt(ent, { id: ent.id }, function (err, res) {
             if (err) {
               seneca.log.error('save/update', 'Error while fetching the updated entity:', err)
               return done(err)
@@ -196,7 +195,7 @@ module.exports = function (opts) {
 
 
         if (isUpsert(ent, q)) {
-          return upsertEnt(newEnt, q, sTypes, function (err, res) {
+          return upsertEnt(newEnt, q, function (err, res) {
             if (err) {
               seneca.log.error('save/upsert', 'Error while inserting the entity:', err)
               return done(err)
@@ -209,7 +208,7 @@ module.exports = function (opts) {
         }
 
 
-        return insertEnt(newEnt, sTypes, function (err, res) {
+        return insertEnt(newEnt, function (err, res) {
           if (err) {
             seneca.log.error('save/insert', 'Error while inserting the entity:', err)
             return done(err)
@@ -238,9 +237,8 @@ module.exports = function (opts) {
 
       var qent = args.qent
       var q = args.q
-      var sTypes = specificTypes(args.target)
 
-      return findEnt(qent, q, sTypes, function (err, res) {
+      return findEnt(qent, q, function (err, res) {
         if (err) {
           seneca.log.error('load', 'Error while fetching the entity:', err)
           return done(err)
@@ -257,9 +255,8 @@ module.exports = function (opts) {
 
       var qent = args.qent
       var q = args.q
-      var sTypes = specificTypes(args.target)
 
-      return listEnts(qent, q, sTypes, function (err, res) {
+      return listEnts(qent, q, function (err, res) {
         if (err) {
           seneca.log.error('list', 'Error while listing the entities:', err)
           return done(err)
@@ -276,9 +273,8 @@ module.exports = function (opts) {
 
       var qent = args.qent
       var q = args.q
-      var sTypes = specificTypes(args.target)
 
-      return removeEnt(qent, q, sTypes, function (err, res) {
+      return removeEnt(qent, q, function (err, res) {
         if (err) {
           seneca.log.error('remove', 'Error while removing the entity/entities:', err)
           return done(err)
@@ -326,27 +322,27 @@ module.exports = function (opts) {
   return {name: store.name, tag: meta.tag}
 
 
-  function buildLoadStm(ent, q, sTypes) {
+  function buildLoadStm(ent, q) {
     var loadQ = _.clone(q)
     loadQ.limit$ = 1
 
-    return QueryBuilder.selectstm(ent, loadQ, sTypes)
+    return QueryBuilder.selectstm(ent, loadQ)
   }
 
-  function buildListStm(ent, q, sTypes) {
+  function buildListStm(ent, q) {
     var cleanQ = _.clone(q)
     stripInvalidLimitInPlace(cleanQ)
     stripInvalidLimitInPlace(cleanQ)
 
-    return QueryBuilder.buildSelectStatement(ent, cleanQ, sTypes)
+    return QueryBuilder.buildSelectStatement(ent, cleanQ)
   }
 
-  function buildRemoveStm(ent, q, sTypes) {
+  function buildRemoveStm(ent, q) {
     var cleanQ = _.clone(q)
     stripInvalidLimitInPlace(cleanQ)
     stripInvalidSkipInPlace(cleanQ)
 
-    return QueryBuilder.deletestm(ent, cleanQ, sTypes)
+    return QueryBuilder.deletestm(ent, cleanQ)
   }
 
   function stripInvalidLimitInPlace(q) {
@@ -369,13 +365,6 @@ module.exports = function (opts) {
     }
   }
 
-  function specificTypes(storeName) {
-    return {
-      escape: '"',
-      prepared: '$'
-    }
-  }
-
   function generateId(seneca, target, done) {
     return seneca.act({ role: actionRole, hook: 'generate_id', target: target }, function (err, res) {
       if (err) {
@@ -388,8 +377,8 @@ module.exports = function (opts) {
     })
   }
 
-  function insertEnt(ent, sTypes, done) {
-    var query = QueryBuilder.savestm(ent, sTypes)
+  function insertEnt(ent, done) {
+    var query = QueryBuilder.savestm(ent)
 
     return execQuery(query, function (err, res) {
       if (err) {
@@ -408,9 +397,9 @@ module.exports = function (opts) {
     })
   }
 
-  function findEnt(ent, q, sTypes, done) {
+  function findEnt(ent, q, done) {
     try {
-      var query = buildLoadStm(ent, q, sTypes)
+      var query = buildLoadStm(ent, q)
 
       return execQuery(query, function (err, res) {
         if (err) {
@@ -428,9 +417,9 @@ module.exports = function (opts) {
     }
   }
 
-  function listEnts(ent, q, sTypes, done) {
+  function listEnts(ent, q, done) {
     try {
-      var query = buildListStm(ent, q, sTypes)
+      var query = buildListStm(ent, q)
 
       return execQuery(query, function (err, res) {
         if (err) {
@@ -448,10 +437,10 @@ module.exports = function (opts) {
     }
   }
 
-  function upsertEnt(ent, q, sTypes, done) {
+  function upsertEnt(ent, q, done) {
     try {
       var upsertFields = internals.cleanArray(q.upsert$)
-      var query = QueryBuilder.upsertstm(ent, upsertFields, sTypes)
+      var query = QueryBuilder.upsertstm(ent, upsertFields)
 
       return execQuery(query, function (err, res) {
         if (err) {
@@ -473,11 +462,9 @@ module.exports = function (opts) {
     }
   }
 
-
-
-  function updateEnt(ent, sTypes, opts, done) {
+  function updateEnt(ent, opts, done) {
     try {
-      var query = QueryBuilder.updatestm(ent, sTypes)
+      var query = QueryBuilder.updatestm(ent)
 
       return execQuery(query, done)
     } catch (err) {
@@ -485,9 +472,9 @@ module.exports = function (opts) {
     }
   }
 
-  function removeEnt(ent, q, sTypes, done) {
+  function removeEnt(ent, q, done) {
     try {
-      var delQuery = buildRemoveStm(ent, q, sTypes)
+      var delQuery = buildRemoveStm(ent, q)
 
       return execQuery(delQuery, function (err, res) {
         if (err) {
