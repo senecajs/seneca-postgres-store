@@ -2,7 +2,7 @@
   "name": "seneca-postgres-store",
   "version": "2.3.0",
   "description": "Seneca data store plugin for PostgreSQL",
-  "main": "lib/postgresql-store.js",
+  "main": "postgresql-store.js",
   "author": "Marian Radulescu",
   "contributors": [
     "Peter Elger <elger.peter@gmail.com> (http://peterelger.com/)",

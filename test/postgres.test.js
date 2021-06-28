@@ -127,10 +127,12 @@ describe('seneca postgres plugin', () => {
     it('should support opaque ids (array) and fields$', () => new Promise((resolve, reject) => {
       var foo = si.make('foo')
 
-      return foo.list$({ids: ['foo1', 'foo2'], fields$: ['p1']}, function (err, res) {
+      return foo.list$({ids: ['foo1', 'foo2'], fields$: ['p1']}, function (err, out) {
         if (err) {
           return reject(err)
         }
+
+        const res = sortBy(out, x => x.p1)
 
         try {
           expect(2).to.equal(res.length)
@@ -868,4 +870,21 @@ function createEntities(si, name, data) {
       )
     })
   }
+}
+
+function sortBy(ary, f) {
+  return [...ary].sort((a, b) => {
+    const x = f(a)
+    const y = f(b)
+
+    if (x < y) {
+      return -1
+    }
+
+    if (x > y) {
+      return 1
+    }
+
+    return 0
+  })
 }

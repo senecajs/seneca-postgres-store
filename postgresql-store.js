@@ -6,7 +6,7 @@ var Uuid = require('node-uuid')
 var name = 'postgresql-store'
 var actionRole = 'sql'
 
-var RelationalStore = require('./relational-util')
+var RelationalStore = require('./lib/relational-util')
 
 var MIN_WAIT = 16
 var MAX_WAIT = 5000
@@ -21,7 +21,7 @@ module.exports = function (opts) {
     fromColumnName: opts.fromColumnName || _.identity,
     toColumnName: opts.toColumnName || _.identity
   }
-  var QueryBuilder = require('./query-builder')(ColumnNameParsing)
+  var QueryBuilder = require('./lib/query-builder')(ColumnNameParsing)
 
 
   var minwait
