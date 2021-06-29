@@ -283,7 +283,6 @@ module.exports = function (opts) {
 
       function toPgSql(sql) {
         let param_no = 1
-
         return sql.replace(/\?/g, _ => Q.valuePlaceholder(param_no++))
       }
     }),
@@ -295,7 +294,7 @@ module.exports = function (opts) {
         const ctx = { seneca, client }
         const { qent, q } = msg
 
-        return removeEnt(qent, q)
+        return removeEnt(qent, q, ctx)
       })
     }),
 
@@ -446,21 +445,86 @@ module.exports = function (opts) {
     return execQuery(query)
   }
 
-  async function removeEnt(ent, q) {
-    const cleanQ = _.clone(q)
-    stripInvalidLimitInPlace(cleanQ)
-    stripInvalidSkipInPlace(cleanQ)
-
-    const query = QueryBuilder.deletestm(ent, cleanQ)
-    const res = await execQuery(query)
-
-    const shouldLoad = !q.all$ && q.load$
-
-    if (shouldLoad && 0 < res.rows.length) {
-      return makeEntOfRow(res.rows[0], ent)
+  async function removeEnt(ent, q, ctx) {
+    if (q.all$) {
+      return removeManyEnts(ent, q, ctx)
     }
 
-    return null
+    return removeOneEnt(ent, q, ctx)
+
+
+    async function removeOneEnt(ent, q, ctx) {
+      const { seneca, client } = ctx
+
+      const ent_table = RelationalStore.tablename(ent)
+      const escapeIdentifier = client.escapeIdentifier.bind(client)
+
+
+      const sel_query = Q.selectstm({
+        columns: ['id'],
+        from: ent_table,
+        where: seneca.util.clean(q),
+        limit: 1,
+        offset: 0 <= q.skip$ ? q.skip$ : null,
+        order_by: q.sort$ || null,
+        escapeIdentifier
+      })
+
+      const { rows: sel_rows } = await execQuery_2(sel_query, ctx)
+
+
+      const del_query = Q.deletestm({
+        from: ent_table,
+        where: {
+          id: sel_rows.map(x => x.id)
+        },
+        escapeIdentifier
+      })
+
+      const { rows: del_rows } = await execQuery_2(del_query, ctx)
+
+      if (q.load$) {
+        return 0 < del_rows.length
+          ? makeEntOfRow(del_rows[0], ent)
+          : null
+      }
+
+      return null
+    }
+
+
+    async function removeManyEnts(ent, q, ctx) {
+      const { seneca, client } = ctx
+
+      const ent_table = RelationalStore.tablename(ent)
+      const escapeIdentifier = client.escapeIdentifier.bind(client)
+
+
+      const sel_query = Q.selectstm({
+        columns: ['id'],
+        from: ent_table,
+        where: seneca.util.clean(q),
+        limit: 0 <= q.limit$ ? q.limit$ : null,
+        offset: 0 <= q.skip$ ? q.skip$ : null,
+        order_by: q.sort$ || null,
+        escapeIdentifier
+      })
+
+      const { rows } = await execQuery_2(sel_query, ctx)
+
+
+      const del_query = Q.deletestm({
+        from: ent_table,
+        where: {
+          id: rows.map(x => x.id)
+        },
+        escapeIdentifier
+      })
+
+      await execQuery_2(del_query, ctx)
+
+      return
+    }
   }
 
   function makeEntOfRow(row, baseEnt) {
