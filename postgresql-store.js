@@ -1,39 +1,39 @@
 'use strict'
 
-var _ = require('lodash')
-var Pg = require('pg')
-var Uuid = require('uuid')
-var RelationalStore = require('./lib/relational-util')
+const _ = require('lodash')
+const Pg = require('pg')
+const Uuid = require('uuid')
+const RelationalStore = require('./lib/relational-util')
 
 const Util = require('util')
 const { intern } = require('./lib/intern')
 const { asyncMethod } = intern
 
-var STORE_NAME = 'postgresql-store'
-var ACTION_ROLE = 'sql'
+const STORE_NAME = 'postgresql-store'
+const ACTION_ROLE = 'sql'
 
-var MIN_WAIT = 16
-var MAX_WAIT = 5000
+const MIN_WAIT = 16
+const MAX_WAIT = 5000
 
 module.exports = function (opts) {
-  var seneca = this
+  const seneca = this
 
   opts.minwait = opts.minwait || MIN_WAIT
   opts.maxwait = opts.maxwait || MAX_WAIT
 
-  var ColumnNameParsing = {
+  const ColumnNameParsing = {
     fromColumnName: opts.fromColumnName || _.identity,
     toColumnName: opts.toColumnName || _.identity
   }
-  var QueryBuilder = require('./lib/query-builder')(ColumnNameParsing)
+  const QueryBuilder = require('./lib/query-builder')(ColumnNameParsing)
 
 
-  var minwait
-  var internals = {}
+  let minwait
+  const internals = {}
 
   function error (query, args, err/*, next*/) {
     if (err) {
-      var errorDetails = {
+      const errorDetails = {
         message: err.message,
         err: err,
         stack: err.stack,
@@ -73,7 +73,7 @@ module.exports = function (opts) {
     })
   }
 
-  var pgConf
+  let pgConf
 
   function configure (spec, done) {
     pgConf = 'string' === typeof (spec) ? null : spec
@@ -81,7 +81,7 @@ module.exports = function (opts) {
     if (!pgConf) {
       pgConf = {}
 
-      var urlM = /^postgres:\/\/((.*?):(.*?)@)?(.*?)(:?(\d+))?\/(.*?)$/.exec(spec)
+      const urlM = /^postgres:\/\/((.*?):(.*?)@)?(.*?)(:?(\d+))?\/(.*?)$/.exec(spec)
       pgConf.name = urlM[7]
       pgConf.port = urlM[6]
       pgConf.host = urlM[4]
@@ -99,9 +99,7 @@ module.exports = function (opts) {
     pgConf.username = pgConf.username || pgConf.user
     pgConf.password = pgConf.password || pgConf.pass
 
-    setImmediate(function () {
-      return done(undefined)
-    })
+    return done()
   }
 
   function execQuery (query) {
@@ -132,7 +130,7 @@ module.exports = function (opts) {
   }
 
 
-  var store = {
+  const store = {
     name: STORE_NAME,
 
     close: function (args, done) {
@@ -156,6 +154,7 @@ module.exports = function (opts) {
 
         return findEnt(ent, { id: ent.id })
       }
+
 
       const newEnt = ent.clone$()
 
@@ -203,23 +202,17 @@ module.exports = function (opts) {
     }),
 
     load: asyncMethod(async function (msg) {
-      var qent = msg.qent
-      var q = msg.q
-
+      const { qent, q } = msg
       return findEnt(qent, q)
     }),
 
     list: asyncMethod(async function (msg) {
-      var qent = msg.qent
-      var q = msg.q
-
+      const { qent, q } = msg
       return listEnts(qent, q)
     }),
 
     remove: asyncMethod(async function (msg) {
-      var qent = msg.qent
-      var q = msg.q
-
+      const { qent, q } = msg
       return removeEnt(qent, q)
     }),
 
@@ -229,22 +222,22 @@ module.exports = function (opts) {
   }
 
   internals.transformDBRowToJSObject = function (row) {
-    var obj = {}
-    for (var attr in row) {
+    const obj = {}
+
+    for (const attr in row) {
       if (row.hasOwnProperty(attr)) {
         obj[ColumnNameParsing.fromColumnName(attr)] = row[attr]
       }
     }
+
     return obj
   }
 
 
-  var meta = seneca.store.init(seneca, opts, store)
+  const meta = seneca.store.init(seneca, opts, store)
 
-  seneca.add({ init: store.name, tag: meta.tag }, function (args, cb) {
-    configure(opts, function (err) {
-      cb(err)
-    })
+  seneca.add({ init: store.name, tag: meta.tag }, function (args, done) {
+    return configure(opts, done)
   })
 
   seneca.add({ role: ACTION_ROLE, hook: 'generate_id', target: STORE_NAME }, function (args, done) {
@@ -348,7 +341,7 @@ module.exports = function (opts) {
   }
 
   async function removeEnt(ent, q) {
-    var cleanQ = _.clone(q)
+    const cleanQ = _.clone(q)
     stripInvalidLimitInPlace(cleanQ)
     stripInvalidSkipInPlace(cleanQ)
 
