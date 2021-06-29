@@ -184,7 +184,7 @@ module.exports = function (opts) {
             return insertEnt(ent)
           }
 
-          return findEnt(ent, { id: ent.id })
+          return findEnt(ent, { id: ent.id }, ctx)
         }
 
 
@@ -241,7 +241,7 @@ module.exports = function (opts) {
         const ctx = { seneca, client }
         const { qent, q } = msg
 
-        return findEnt(qent, q)
+        return findEnt(qent, q, ctx)
       })
     }),
 
@@ -342,15 +342,24 @@ module.exports = function (opts) {
     return null
   }
 
-  async function findEnt(ent, q) {
-    const loadQ = _.clone(q)
-    loadQ.limit$ = 1
+  async function findEnt(ent, q, ctx) {
+    const { client } = ctx
+    const ent_table = RelationalStore.tablename(ent)
 
-    const query = QueryBuilder.selectstm(ent, loadQ)
-    const res = await execQuery(query)
+    const query = Q.selectstm({
+      columns: '*',
+      from: ent_table,
+      where: whereOfQ(q, ctx),
+      limit: 1,
+      offset: 0 <= q.skip$ ? q.skip$ : null,
+      order_by: q.sort$ || null,
+      escapeIdentifier: client.escapeIdentifier.bind(client)
+    })
 
-    if (res.rows && res.rows.length > 0) {
-      return makeEntOfRow(res.rows[0], ent)
+    const { rows } = await execQuery(query)
+
+    if (rows.length > 0) {
+      return makeEntOfRow(rows[0], ent)
     }
 
     return null
@@ -370,13 +379,9 @@ module.exports = function (opts) {
       escapeIdentifier: client.escapeIdentifier.bind(client)
     })
 
-    const res = await execQuery(query)
+    const { rows } = await execQuery(query)
 
-    const list = res.rows.map((row) => {
-      return makeEntOfRow(row, ent)
-    })
-
-    return list
+    return rows.map((row) => makeEntOfRow(row, ent))
   }
 
   function whereOfQ(q, ctx) {
