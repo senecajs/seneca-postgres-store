@@ -254,29 +254,6 @@ module.exports = function (opts) {
   return {name: store.name, tag: meta.tag}
 
 
-  function buildLoadStm(ent, q) {
-    var loadQ = _.clone(q)
-    loadQ.limit$ = 1
-
-    return QueryBuilder.selectstm(ent, loadQ)
-  }
-
-  function buildListStm(ent, q) {
-    var cleanQ = _.clone(q)
-    stripInvalidLimitInPlace(cleanQ)
-    stripInvalidLimitInPlace(cleanQ)
-
-    return QueryBuilder.buildSelectStatement(ent, cleanQ)
-  }
-
-  function buildRemoveStm(ent, q) {
-    var cleanQ = _.clone(q)
-    stripInvalidLimitInPlace(cleanQ)
-    stripInvalidSkipInPlace(cleanQ)
-
-    return QueryBuilder.deletestm(ent, cleanQ)
-  }
-
   function stripInvalidLimitInPlace(q) {
     if (Array.isArray(q)) {
       return
@@ -322,7 +299,10 @@ module.exports = function (opts) {
   }
 
   async function findEnt(ent, q) {
-    const query = buildLoadStm(ent, q)
+    const loadQ = _.clone(q)
+    loadQ.limit$ = 1
+
+    const query = QueryBuilder.selectstm(ent, loadQ)
     const res = await execQuery(query)
 
     if (res.rows && res.rows.length > 0) {
@@ -333,7 +313,11 @@ module.exports = function (opts) {
   }
 
   async function listEnts(ent, q) {
-    const query = buildListStm(ent, q)
+    const cleanQ = _.clone(q)
+    stripInvalidLimitInPlace(cleanQ)
+    stripInvalidLimitInPlace(cleanQ)
+
+    const query = QueryBuilder.buildSelectStatement(ent, cleanQ)
     const res = await execQuery(query)
 
     const list = res.rows.map((row) => {
@@ -364,11 +348,16 @@ module.exports = function (opts) {
   }
 
   async function removeEnt(ent, q) {
-    const delQuery = buildRemoveStm(ent, q)
-    const res = await execQuery(delQuery)
+    var cleanQ = _.clone(q)
+    stripInvalidLimitInPlace(cleanQ)
+    stripInvalidSkipInPlace(cleanQ)
+
+    const query = QueryBuilder.deletestm(ent, cleanQ)
+    const res = await execQuery(query)
+
     const shouldLoad = !q.all$ && q.load$
 
-    if (shouldLoad && res.rows.length > 0) {
+    if (shouldLoad && 0 < res.rows.length) {
       return makeEntOfRow(res.rows[0], ent)
     }
 
