@@ -56,7 +56,7 @@
     "annotate": "docco lib/postgresql-store.js -o docs/annotated"
   },
   "dependencies": {
-    "pg": "5.1.0",
+    "pg": "8.6.0",
     "uuid": "3.4.0"
   },
   "devDependencies": {

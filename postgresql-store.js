@@ -74,6 +74,7 @@ module.exports = function (opts) {
   }
 
   let pgConf
+  let dbPool
 
   function configure (spec, done) {
     pgConf = 'string' === typeof (spec) ? null : spec
@@ -99,34 +100,40 @@ module.exports = function (opts) {
     pgConf.username = pgConf.username || pgConf.user
     pgConf.password = pgConf.password || pgConf.pass
 
+    // TODO: CLEAN UP. spec MUST MAKE IT THROUGH TO THE PG DRIVER !!!
+    // The reason it is like so now, is because the driver breaks if
+    // you try to pass any Object value.
+    //
+    dbPool = new Pg.Pool({
+      name: pgConf.name,
+      host: pgConf.host,
+      port: pgConf.port,
+      username: pgConf.username,
+      password: pgConf.password,
+      minwait: pgConf.minwait,
+      maxwait: pgConf.maxwait,
+      user: pgConf.user,
+      database: pgConf.database
+    })
+
     return done()
   }
 
-  function execQuery (query) {
-    return new Promise((resolve, reject) => {
-      return Pg.connect(pgConf, (err, client, releaseConnection) => {
-        if (err) {
-          return reject(err)
-        }
+  async function execQuery(query) {
+    if (!query) {
+      throw new Error('An empty query is not a valid query')
+    }
 
-        if (!query) {
-          seneca.log.error('An empty query is not a valid query')
-          releaseConnection()
+    const client = await dbPool.connect()
+    let result
 
-          return reject(err)
-        }
+    try {
+      result = await client.query(query)
+    } finally {
+      client.release()
+    }
 
-        return client.query(query, (err, res) => {
-          releaseConnection()
-
-          if (err) {
-            return reject(err)
-          }
-
-          return resolve(res)
-        })
-      })
-    })
+    return result
   }
 
 
@@ -134,8 +141,7 @@ module.exports = function (opts) {
     name: STORE_NAME,
 
     close: function (args, done) {
-      Pg.end()
-      return done()
+      dbPool.end().then(done).catch(done)
     },
 
     save: asyncMethod(async function (msg) {
@@ -217,7 +223,7 @@ module.exports = function (opts) {
     }),
 
     native: function (msg, done) {
-      Pg.connect(pgConf, done)
+      dbPool.connect().then(done).catch(done)
     }
   }
 
