@@ -888,3 +888,29 @@ function sortBy(ary, f) {
     return 0
   })
 }
+
+// TODO: Remove these tests.
+//
+describe('qbuilder', () => {
+  const Q = require('../lib/qbuilder')
+
+  lab.it('', async () => {
+    const fakeEscapeIdentifier = id => '"' + id + '"'
+
+    const result = Q.selectstm({
+      columns: ['id'],
+      from: 'users',
+      where: {
+        id: 111,
+        email: 'rr@voxgig.com'
+      },
+      limit: 10,
+      offset: 5,
+      order_by: { email: -1 },
+      escapeIdentifier: fakeEscapeIdentifier
+    })
+
+    console.dir(result)
+  })
+})
+

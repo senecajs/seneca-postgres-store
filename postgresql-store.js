@@ -26,6 +26,7 @@ module.exports = function (opts) {
     toColumnName: opts.toColumnName || _.identity
   }
   const QueryBuilder = require('./lib/query-builder')(ColumnNameParsing)
+  const Q = require('./lib/qbuilder')
 
 
   let minwait
@@ -170,6 +171,8 @@ module.exports = function (opts) {
       const seneca = this
 
       return withDbClient(dbPool, async (client) => {
+        const ctx = { seneca, client }
+
         const { ent, q } = msg
         const { auto_increment$: autoIncrement = false } = q
 
@@ -232,22 +235,34 @@ module.exports = function (opts) {
     }),
 
     load: asyncMethod(async function (msg) {
+      const seneca = this
+
       return withDbClient(dbPool, async (client) => {
+        const ctx = { seneca, client }
         const { qent, q } = msg
+
         return findEnt(qent, q)
       })
     }),
 
     list: asyncMethod(async function (msg) {
+      const seneca = this
+
       return withDbClient(dbPool, async (client) => {
+        const ctx = { seneca, client }
         const { qent, q } = msg
-        return listEnts(qent, q)
+
+        return listEnts(qent, q, ctx)
       })
     }),
 
     remove: asyncMethod(async function (msg) {
+      const seneca = this
+
       return withDbClient(dbPool, async (client) => {
+        const ctx = { seneca, client }
         const { qent, q } = msg
+
         return removeEnt(qent, q)
       })
     }),
@@ -341,12 +356,20 @@ module.exports = function (opts) {
     return null
   }
 
-  async function listEnts(ent, q) {
-    const cleanQ = _.clone(q)
-    stripInvalidLimitInPlace(cleanQ)
-    stripInvalidLimitInPlace(cleanQ)
+  async function listEnts(ent, q, ctx) {
+    const { client } = ctx
+    const ent_table = RelationalStore.tablename(ent)
 
-    const query = QueryBuilder.buildSelectStatement(ent, cleanQ)
+    const query = Q.selectstm({
+      columns: '*',
+      from: ent_table,
+      where: whereOfQ(q, ctx),
+      limit: 0 <= q.limit$ ? q.limit$ : null,
+      offset: 0 <= q.skip$ ? q.skip$ : null,
+      order_by: q.sort$ || null,
+      escapeIdentifier: client.escapeIdentifier.bind(client)
+    })
+
     const res = await execQuery(query)
 
     const list = res.rows.map((row) => {
@@ -354,6 +377,16 @@ module.exports = function (opts) {
     })
 
     return list
+  }
+
+  function whereOfQ(q, ctx) {
+    if ('string' === typeof q || Array.isArray(q)) {
+      return { id: q }
+    }
+
+    const { seneca } = ctx
+
+    return seneca.util.clean(q)
   }
 
   async function upsertEnt(upsertFields, ent, q) {
