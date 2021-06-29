@@ -3,11 +3,14 @@
 var _ = require('lodash')
 var Pg = require('pg')
 var Uuid = require('uuid')
+var RelationalStore = require('./lib/relational-util')
+
+const Util = require('util')
+const { intern } = require('./lib/intern')
+const { asyncMethod } = intern
 
 var STORE_NAME = 'postgresql-store'
 var ACTION_ROLE = 'sql'
-
-var RelationalStore = require('./lib/relational-util')
 
 var MIN_WAIT = 16
 var MAX_WAIT = 5000
@@ -101,25 +104,30 @@ module.exports = function (opts) {
     })
   }
 
-  function execQuery (query, done) {
-    Pg.connect(pgConf, function (err, client, releaseConnection) {
-      if (err) {
-        seneca.log.error('Connection error', err)
-        return done(err, undefined)
-      }
-      else {
-        if (!query) {
-          err = new Error('Query cannot be empty')
-          seneca.log.error('An empty query is not a valid query', err)
-          releaseConnection()
-          return done(err, undefined)
+  function execQuery (query) {
+    return new Promise((resolve, reject) => {
+      return Pg.connect(pgConf, (err, client, releaseConnection) => {
+        if (err) {
+          return reject(err)
         }
 
-        client.query(query, function (err, res) {
+        if (!query) {
+          seneca.log.error('An empty query is not a valid query')
           releaseConnection()
-          return done(err, res)
+
+          return reject(err)
+        }
+
+        return client.query(query, (err, res) => {
+          releaseConnection()
+
+          if (err) {
+            return reject(err)
+          }
+
+          return resolve(res)
         })
-      }
+      })
     })
   }
 
@@ -129,97 +137,45 @@ module.exports = function (opts) {
 
     close: function (args, done) {
       Pg.end()
-      setImmediate(done)
+      return done()
     },
 
-    save: function (args, done) {
-      var seneca = this
+    save: asyncMethod(async function (msg) {
+      const seneca = this
 
-      var ent = args.ent
-
-      var q = args.q
-      var autoIncrement = q.auto_increment$ || false
+      const { ent, q } = msg
+      const { auto_increment$: autoIncrement = false } = q
 
       if (isUpdate(ent)) {
-        return updateEnt(ent, opts, function (err, res) {
-          if (err) {
-            seneca.log.error('save/update', 'Error while updating the entity:', err)
-            return done(err)
-          }
+        const update = await updateEnt(ent)
+        const updatedAnything = update.rowCount > 0
 
-          var updatedAnything = res.rowCount > 0
+        if (!updatedAnything) {
+          return insertEnt(ent)
+        }
 
-          if (!updatedAnything) {
-            return insertEnt(ent, function (err, res) {
-              if (err) {
-                seneca.log.error('save/insert', 'Error while inserting the entity:', err)
-                return done(err)
-              }
-
-              seneca.log.debug('save/insert', res)
-
-              return done(null, res)
-            })
-          }
-
-          return findEnt(ent, { id: ent.id }, function (err, res) {
-            if (err) {
-              seneca.log.error('save/update', 'Error while fetching the updated entity:', err)
-              return done(err)
-            }
-
-            seneca.log.debug('save/update', res)
-
-            return done(null, res)
-          })
-        })
+        return findEnt(ent, { id: ent.id })
       }
 
+      const generatedId = await generateId(seneca)
 
-      return generateId(seneca, STORE_NAME, function (err, generatedId) {
-        if (err) {
-          seneca.log.error('save/insert', 'Error while generating an id for the entity:', err)
-          return done(err)
-        }
-
-
-        var newId = null == ent.id$
-          ? generatedId
-          : ent.id$
+      const newId = null == ent.id$
+        ? generatedId
+        : ent.id$
 
 
-        var newEnt = ent.clone$()
+      const newEnt = ent.clone$()
 
-        if (!autoIncrement) {
-          newEnt.id = newId
-        }
+      if (!autoIncrement) {
+        newEnt.id = newId
+      }
 
+      if (isUpsert(ent, q)) {
+        return upsertEnt(newEnt, q)
+      }
 
-        if (isUpsert(ent, q)) {
-          return upsertEnt(newEnt, q, function (err, res) {
-            if (err) {
-              seneca.log.error('save/upsert', 'Error while inserting the entity:', err)
-              return done(err)
-            }
+      return insertEnt(newEnt)
 
-            seneca.log.debug('save/upsert', res)
-
-            return done(null, res)
-          })
-        }
-
-
-        return insertEnt(newEnt, function (err, res) {
-          if (err) {
-            seneca.log.error('save/insert', 'Error while inserting the entity:', err)
-            return done(err)
-          }
-
-          seneca.log.debug('save/insert', res)
-
-          return done(null, res)
-        })
-      })
 
       function isUpsert(ent, q) {
         return !isUpdate(ent) &&
@@ -227,67 +183,33 @@ module.exports = function (opts) {
           internals.cleanArray(q.upsert$).length > 0
       }
 
-
       function isUpdate(ent) {
         return null != ent.id
       }
-    },
+    }),
 
-    load: function (args, done) {
-      var seneca = this
+    load: asyncMethod(async function (msg) {
+      var qent = msg.qent
+      var q = msg.q
 
-      var qent = args.qent
-      var q = args.q
+      return findEnt(qent, q)
+    }),
 
-      return findEnt(qent, q, function (err, res) {
-        if (err) {
-          seneca.log.error('load', 'Error while fetching the entity:', err)
-          return done(err)
-        }
+    list: asyncMethod(async function (msg) {
+      var qent = msg.qent
+      var q = msg.q
 
-        seneca.log.debug('load', res)
+      return listEnts(qent, q)
+    }),
 
-        return done(null, res)
-      })
-    },
+    remove: asyncMethod(async function (msg) {
+      var qent = msg.qent
+      var q = msg.q
 
-    list: function (args, done) {
-      var seneca = this
+      return removeEnt(qent, q)
+    }),
 
-      var qent = args.qent
-      var q = args.q
-
-      return listEnts(qent, q, function (err, res) {
-        if (err) {
-          seneca.log.error('list', 'Error while listing the entities:', err)
-          return done(err)
-        }
-
-        seneca.log.debug('list', q, res.length)
-
-        return done(null, res)
-      })
-    },
-
-    remove: function (args, done) {
-      var seneca = this
-
-      var qent = args.qent
-      var q = args.q
-
-      return removeEnt(qent, q, function (err, res) {
-        if (err) {
-          seneca.log.error('remove', 'Error while removing the entity/entities:', err)
-          return done(err)
-        }
-
-        seneca.log.debug('remove', q)
-
-        return done(null, res)
-      })
-    },
-
-    native: function (args, done) {
+    native: function (msg, done) {
       Pg.connect(pgConf, done)
     }
   }
@@ -316,8 +238,8 @@ module.exports = function (opts) {
     })
   })
 
-  seneca.add({role: ACTION_ROLE, hook: 'generate_id', target: store.name}, function (args, done) {
-    return done(null, {id: Uuid()})
+  seneca.add({ role: ACTION_ROLE, hook: 'generate_id', target: STORE_NAME }, function (args, done) {
+    return done(null, { id: Uuid() })
   })
 
   return {name: store.name, tag: meta.tag}
@@ -366,140 +288,88 @@ module.exports = function (opts) {
     }
   }
 
-  function generateId(seneca, target, done) {
-    return seneca.act({ role: ACTION_ROLE, hook: 'generate_id', target: target }, function (err, res) {
-      if (err) {
-        return done(err)
-      }
+  async function generateId(seneca) {
+    const act = Util.promisify(seneca.act).bind(seneca)
+    const result = await act({ role: ACTION_ROLE, hook: 'generate_id', target: STORE_NAME })
 
-      var newId = res.id
+    const { id: newId } = result
 
-      return done(null, newId)
+    return newId
+  }
+
+  async function insertEnt(ent) {
+    const query = QueryBuilder.savestm(ent)
+    const res = await execQuery(query)
+
+    if (res.rows && res.rows.length > 0) {
+      // NOTE: res.rows should always be an array of length === 1,
+      // however we want to play it safe here, and not crash the client
+      // if something goes awry.
+      //
+      return makeEntOfRow(res.rows[0], ent)
+    }
+
+    return null
+  }
+
+  async function findEnt(ent, q) {
+    const query = buildLoadStm(ent, q)
+    const res = await execQuery(query)
+
+    if (res.rows && res.rows.length > 0) {
+      return makeEntOfRow(res.rows[0], ent)
+    }
+
+    return null
+  }
+
+  async function listEnts(ent, q) {
+    const query = buildListStm(ent, q)
+    const res = await execQuery(query)
+
+    const list = res.rows.map((row) => {
+      return makeEntOfRow(row, ent)
     })
+
+    return list
   }
 
-  function insertEnt(ent, done) {
-    var query = QueryBuilder.savestm(ent)
+  async function upsertEnt(ent, q) {
+    const upsertFields = internals.cleanArray(q.upsert$)
+    const query = QueryBuilder.upsertstm(ent, upsertFields)
+    const res = await execQuery(query)
 
-    return execQuery(query, function (err, res) {
-      if (err) {
-        return done(err)
-      }
-
-      if (res.rows && res.rows.length > 0) {
-        // NOTE: res.rows should always be an array of length === 1,
-        // however we want to play it safe here, and not crash the client
-        // if something goes awry.
-        //
-        return done(null, makeEntOfRow(res.rows[0], ent))
-      }
-
-      return done(null, null)
-    })
-  }
-
-  function findEnt(ent, q, done) {
-    try {
-      var query = buildLoadStm(ent, q)
-
-      return execQuery(query, function (err, res) {
-        if (err) {
-          return done(err)
-        }
-
-        if (res.rows && res.rows.length > 0) {
-          return done(null, makeEntOfRow(res.rows[0], ent))
-        }
-
-        return done(null, null)
-      })
-    } catch (err) {
-      return done(err)
+    if (res.rows && res.rows.length > 0) {
+      // NOTE: res.rows should always be an array of length === 1,
+      // however we want to play it safe here, and not crash the client
+      // if something goes awry.
+      //
+      return makeEntOfRow(res.rows[0], ent)
     }
+
+    return null
   }
 
-  function listEnts(ent, q, done) {
-    try {
-      var query = buildListStm(ent, q)
-
-      return execQuery(query, function (err, res) {
-        if (err) {
-          return done(err)
-        }
-
-        var list = res.rows.map(function (row) {
-          return makeEntOfRow(row, ent)
-        })
-
-        return done(null, list)
-      })
-    } catch (err) {
-      return done(err)
-    }
+  async function updateEnt(ent) {
+    const query = QueryBuilder.updatestm(ent)
+    return execQuery(query)
   }
 
-  function upsertEnt(ent, q, done) {
-    try {
-      var upsertFields = internals.cleanArray(q.upsert$)
-      var query = QueryBuilder.upsertstm(ent, upsertFields)
+  async function removeEnt(ent, q) {
+    const delQuery = buildRemoveStm(ent, q)
+    const res = await execQuery(delQuery)
+    const shouldLoad = !q.all$ && q.load$
 
-      return execQuery(query, function (err, res) {
-        if (err) {
-          return done(err)
-        }
-
-        if (res.rows && res.rows.length > 0) {
-          // NOTE: res.rows should always be an array of length === 1,
-          // however we want to play it safe here, and not crash the client
-          // if something goes awry.
-          //
-          return done(null, makeEntOfRow(res.rows[0], ent))
-        }
-
-        return done(null, null)
-      })
-    } catch (err) {
-      return done(err)
+    if (shouldLoad && res.rows.length > 0) {
+      return makeEntOfRow(res.rows[0], ent)
     }
-  }
 
-  function updateEnt(ent, opts, done) {
-    try {
-      var query = QueryBuilder.updatestm(ent)
-
-      return execQuery(query, done)
-    } catch (err) {
-      return done(err)
-    }
-  }
-
-  function removeEnt(ent, q, done) {
-    try {
-      var delQuery = buildRemoveStm(ent, q)
-
-      return execQuery(delQuery, function (err, res) {
-        if (err) {
-          return done(err)
-        }
-
-        var shouldLoad = !q.all$ && q.load$
-
-        if (shouldLoad && res.rows.length > 0) {
-          return done(null, makeEntOfRow(res.rows[0], ent))
-        }
-
-        return done(null, null)
-      })
-    } catch (err) {
-      return done(err)
-    }
+    return null
   }
 
   function makeEntOfRow(row, baseEnt) {
-    var attrs = internals.transformDBRowToJSObject(row)
-    var newEnt = RelationalStore.makeent(baseEnt, attrs)
-
-    return newEnt
+    const attrs = internals.transformDBRowToJSObject(row)
+    return RelationalStore.makeent(baseEnt, attrs)
   }
 }
 
