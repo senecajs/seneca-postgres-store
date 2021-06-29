@@ -157,30 +157,44 @@ module.exports = function (opts) {
         return findEnt(ent, { id: ent.id })
       }
 
-      const generatedId = await generateId(seneca)
-
-      const newId = null == ent.id$
-        ? generatedId
-        : ent.id$
-
-
       const newEnt = ent.clone$()
 
       if (!autoIncrement) {
+        const generatedId = await generateId(seneca)
+
+        const newId = null == ent.id$
+          ? generatedId
+          : ent.id$
+
         newEnt.id = newId
       }
 
-      if (isUpsert(ent, q)) {
-        return upsertEnt(newEnt, q)
+
+      const upsertFields = maybeUpsert(ent, q)
+
+      if (null != upsertFields) {
+        return upsertEnt(upsertFields, newEnt, q)
       }
 
       return insertEnt(newEnt)
 
 
-      function isUpsert(ent, q) {
-        return !isUpdate(ent) &&
-          Array.isArray(q.upsert$) &&
-          internals.cleanArray(q.upsert$).length > 0
+      function maybeUpsert(ent, q) {
+        if (isUpdate(ent)) {
+          return null
+        }
+
+        if (!Array.isArray(q.upsert$)) {
+          return null
+        }
+
+        const upsertFields = q.upsert$.filter((p) => !p.includes('$'))
+
+        if (0 === upsertFields.length) {
+          return null
+        }
+
+        return upsertFields
       }
 
       function isUpdate(ent) {
@@ -222,11 +236,6 @@ module.exports = function (opts) {
       }
     }
     return obj
-  }
-
-  internals.cleanArray = function (ary) {
-    var isPublicProp = (p) => !p.includes('$')
-    return ary.filter(isPublicProp)
   }
 
 
@@ -334,8 +343,7 @@ module.exports = function (opts) {
     return list
   }
 
-  async function upsertEnt(ent, q) {
-    const upsertFields = internals.cleanArray(q.upsert$)
+  async function upsertEnt(upsertFields, ent, q) {
     const query = QueryBuilder.upsertstm(ent, upsertFields)
     const res = await execQuery(query)
 
