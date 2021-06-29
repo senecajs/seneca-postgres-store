@@ -1,6 +1,7 @@
 'use strict'
 
 const _ = require('lodash')
+const Assert = require('assert')
 const Pg = require('pg')
 const Uuid = require('uuid')
 const RelationalStore = require('./lib/relational-util')
@@ -134,12 +135,14 @@ module.exports = function (opts) {
     return result
   }
 
-  async function execQuery_2(query, dbPool) {
+  async function execQuery_2(query, ctx) {
     if (!query) {
       throw new Error('An empty query is not a valid query')
     }
 
-    return withDbClient(dbPool, async (client) => client.query(query))
+    const { client } = ctx
+
+    return client.query(query)
   }
 
   async function execQuery(query) {
@@ -252,8 +255,37 @@ module.exports = function (opts) {
         const ctx = { seneca, client }
         const { qent, q } = msg
 
-        return listEnts(qent, q, ctx)
+        const nativeQuery = isNativeQuery(q)
+
+        if (null == nativeQuery) {
+          return listEnts(qent, q, ctx)
+        }
+
+        const { rows } = await execQuery_2(nativeQuery, ctx)
+
+        return rows.map(row => makeEntOfRow(row, qent))
       })
+
+      function isNativeQuery(q) {
+        if ('string' === typeof q.native$) {
+          return toPgSql(q.native$)
+        }
+
+        if (Array.isArray(q.native$)) {
+          Assert(0 < q.native$.length, 'q.native$.length')
+          const [sql, ...bindings] = q.native$
+
+          return { text: toPgSql(sql), values: bindings }
+        }
+
+        return null
+      }
+
+      function toPgSql(sql) {
+        let param_no = 1
+
+        return sql.replace(/\?/g, _ => Q.valuePlaceholder(param_no++))
+      }
     }),
 
     remove: asyncMethod(async function (msg) {
