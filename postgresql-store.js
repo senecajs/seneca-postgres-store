@@ -304,26 +304,6 @@ module.exports = function (opts) {
   return {name: store.name, tag: meta.tag}
 
 
-  function stripInvalidLimitInPlace(q) {
-    if (Array.isArray(q)) {
-      return
-    }
-
-    if (!(typeof q.limit$ === 'number' && q.limit$ >= 0)) {
-      delete q.limit$
-    }
-  }
-
-  function stripInvalidSkipInPlace(q) {
-    if (Array.isArray(q)) {
-      return
-    }
-
-    if (!(typeof q.skip$ === 'number' && q.skip$ >= 0)) {
-      delete q.skip$
-    }
-  }
-
   async function generateId(seneca) {
     const act = Util.promisify(seneca.act).bind(seneca)
     const result = await act({ role: ACTION_ROLE, hook: 'generate_id', target: STORE_NAME })
