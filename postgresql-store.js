@@ -200,7 +200,7 @@ module.exports = function (opts) {
         const upsertFields = maybeUpsert(ent, q)
 
         if (null != upsertFields) {
-          return upsertEnt(upsertFields, newEnt, q)
+          return upsertEnt(upsertFields, newEnt, q, ctx)
         }
 
         return insertEnt(newEnt, ctx)
@@ -421,19 +421,31 @@ module.exports = function (opts) {
     return seneca.util.clean(q)
   }
 
-  async function upsertEnt(upsertFields, ent, q) {
-    const query = QueryBuilder.upsertstm(ent, upsertFields)
-    const res = await execQuery(query)
+  async function upsertEnt(upsert_fields, ent, q, ctx) {
+    const { client } = ctx
+    const escapeIdentifier = client.escapeIdentifier.bind(client)
 
-    if (res.rows && res.rows.length > 0) {
-      // NOTE: res.rows should always be an array of length === 1,
-      // however we want to play it safe here, and not crash the client
-      // if something goes awry.
-      //
-      return makeEntOfRow(res.rows[0], ent)
-    }
+    const ent_table = RelationalStore.tablename(ent)
+    const entp = RelationalStore.makeentp(ent)
 
-    return null
+    const insert_values = intern.compact(entp)
+    const set_values = intern.compact(entp); delete set_values.id
+
+    const query = Q.insertstm({
+      into: ent_table,
+      values: insert_values,
+      on_conflict: {
+        columns: upsert_fields,
+        do_update: {
+          set: set_values
+        }
+      },
+      escapeIdentifier
+    })
+
+    const { rows } = await execQuery(query)
+
+    return makeEntOfRow(rows[0], ent)
   }
 
   async function updateEnt(ent, ctx) {
