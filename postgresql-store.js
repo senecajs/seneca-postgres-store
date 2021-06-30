@@ -135,7 +135,7 @@ module.exports = function (opts) {
     return result
   }
 
-  async function execQuery_2(query, ctx) {
+  async function execQuery(query, ctx) {
     if (!query) {
       throw new Error('An empty query is not a valid query')
     }
@@ -144,24 +144,6 @@ module.exports = function (opts) {
 
     return client.query(query)
   }
-
-  async function execQuery(query) {
-    if (!query) {
-      throw new Error('An empty query is not a valid query')
-    }
-
-    const client = await dbPool.connect()
-    let result
-
-    try {
-      result = await client.query(query)
-    } finally {
-      client.release()
-    }
-
-    return result
-  }
-
 
   const store = {
     name: STORE_NAME,
@@ -254,7 +236,7 @@ module.exports = function (opts) {
           return listEnts(qent, q, ctx)
         }
 
-        const { rows } = await execQuery_2(nativeQuery, ctx)
+        const { rows } = await execQuery(nativeQuery, ctx)
 
         return rows.map(row => makeEntOfRow(row, qent))
       })
@@ -364,7 +346,7 @@ module.exports = function (opts) {
       escapeIdentifier
     })
 
-    const insert = await execQuery_2(ins_query, ctx)
+    const insert = await execQuery(ins_query, ctx)
 
     return makeEntOfRow(insert.rows[0], ent)
   }
@@ -383,7 +365,7 @@ module.exports = function (opts) {
       escapeIdentifier: client.escapeIdentifier.bind(client)
     })
 
-    const { rows } = await execQuery(query)
+    const { rows } = await execQuery(query, ctx)
 
     if (rows.length > 0) {
       return makeEntOfRow(rows[0], ent)
@@ -406,7 +388,7 @@ module.exports = function (opts) {
       escapeIdentifier: client.escapeIdentifier.bind(client)
     })
 
-    const { rows } = await execQuery(query)
+    const { rows } = await execQuery(query, ctx)
 
     return rows.map((row) => makeEntOfRow(row, ent))
   }
@@ -443,7 +425,7 @@ module.exports = function (opts) {
       escapeIdentifier
     })
 
-    const { rows } = await execQuery(query)
+    const { rows } = await execQuery(query, ctx)
 
     return makeEntOfRow(rows[0], ent)
   }
@@ -464,7 +446,7 @@ module.exports = function (opts) {
       escapeIdentifier
     })
 
-    const update = await execQuery_2(update_query, ctx)
+    const update = await execQuery(update_query, ctx)
     const updated_anything = update.rows.length > 0
 
     if (updated_anything) {
@@ -480,7 +462,7 @@ module.exports = function (opts) {
       escapeIdentifier
     })
 
-    const insert = await execQuery_2(ins_query, ctx)
+    const insert = await execQuery(ins_query, ctx)
 
     return makeEntOfRow(insert.rows[0], ent)
   }
@@ -510,7 +492,7 @@ module.exports = function (opts) {
         escapeIdentifier
       })
 
-      const { rows: sel_rows } = await execQuery_2(sel_query, ctx)
+      const { rows: sel_rows } = await execQuery(sel_query, ctx)
 
 
       const del_query = Q.deletestm({
@@ -521,7 +503,7 @@ module.exports = function (opts) {
         escapeIdentifier
       })
 
-      const { rows: del_rows } = await execQuery_2(del_query, ctx)
+      const { rows: del_rows } = await execQuery(del_query, ctx)
 
       if (q.load$) {
         return 0 < del_rows.length
@@ -550,7 +532,7 @@ module.exports = function (opts) {
         escapeIdentifier
       })
 
-      const { rows } = await execQuery_2(sel_query, ctx)
+      const { rows } = await execQuery(sel_query, ctx)
 
 
       const del_query = Q.deletestm({
@@ -561,7 +543,7 @@ module.exports = function (opts) {
         escapeIdentifier
       })
 
-      await execQuery_2(del_query, ctx)
+      await execQuery(del_query, ctx)
 
       return
     }
