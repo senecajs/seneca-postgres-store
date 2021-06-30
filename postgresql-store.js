@@ -180,14 +180,7 @@ module.exports = function (opts) {
         const { auto_increment$: autoIncrement = false } = q
 
         if (isUpdate(ent)) {
-          const update = await updateEnt(ent)
-          const updatedAnything = update.rowCount > 0
-
-          if (!updatedAnything) {
-            return insertEnt(ent)
-          }
-
-          return findEnt(ent, { id: ent.id }, ctx)
+          return await updateEnt(ent, ctx)
         }
 
 
@@ -440,9 +433,41 @@ module.exports = function (opts) {
     return null
   }
 
-  async function updateEnt(ent) {
-    const query = QueryBuilder.updatestm(ent)
-    return execQuery(query)
+  async function updateEnt(ent, ctx) {
+    const { client } = ctx
+    const escapeIdentifier = client.escapeIdentifier.bind(client)
+
+    const ent_table = RelationalStore.tablename(ent)
+    const entp = RelationalStore.makeentp(ent)
+
+    const { id: ent_id } = ent
+
+    const update_query = Q.updatestm({
+      table: ent_table,
+      set: intern.compact(entp),
+      where: { id: ent_id },
+      escapeIdentifier
+    })
+
+    const update = await execQuery_2(update_query, ctx)
+    const updated_anything = update.rows.length > 0
+
+    if (updated_anything) {
+      return makeEntOfRow(update.rows[0], ent)
+    }
+
+
+    // TODO: Re-write using upserts on the id column:
+    //
+    const ins_query = Q.insertstm({
+      into: ent_table,
+      values: intern.compact(entp),
+      escapeIdentifier
+    })
+
+    const insert = await execQuery_2(ins_query, ctx)
+
+    return makeEntOfRow(insert.rows[0], ent)
   }
 
   async function removeEnt(ent, q, ctx) {
