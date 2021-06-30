@@ -180,7 +180,7 @@ module.exports = function (opts) {
         const { auto_increment$: autoIncrement = false } = q
 
         if (isUpdate(ent)) {
-          return await updateEnt(ent, ctx)
+          return updateEnt(ent, ctx)
         }
 
 
@@ -203,7 +203,7 @@ module.exports = function (opts) {
           return upsertEnt(upsertFields, newEnt, q)
         }
 
-        return insertEnt(newEnt)
+        return insertEnt(newEnt, ctx)
 
 
         function maybeUpsert(ent, q) {
@@ -351,19 +351,22 @@ module.exports = function (opts) {
     return newId
   }
 
-  async function insertEnt(ent) {
-    const query = QueryBuilder.savestm(ent)
-    const res = await execQuery(query)
+  async function insertEnt(ent, ctx) {
+    const { client } = ctx
+    const escapeIdentifier = client.escapeIdentifier.bind(client)
 
-    if (res.rows && res.rows.length > 0) {
-      // NOTE: res.rows should always be an array of length === 1,
-      // however we want to play it safe here, and not crash the client
-      // if something goes awry.
-      //
-      return makeEntOfRow(res.rows[0], ent)
-    }
+    const ent_table = RelationalStore.tablename(ent)
+    const entp = RelationalStore.makeentp(ent)
 
-    return null
+    const ins_query = Q.insertstm({
+      into: ent_table,
+      values: intern.compact(entp),
+      escapeIdentifier
+    })
+
+    const insert = await execQuery_2(ins_query, ctx)
+
+    return makeEntOfRow(insert.rows[0], ent)
   }
 
   async function findEnt(ent, q, ctx) {
