@@ -1,31 +1,22 @@
-'use strict'
-
 const _ = require('lodash')
 const Assert = require('assert')
 const Pg = require('pg')
 
+const Q = require('./lib/qbuilder')
 const { intern } = require('./lib/intern')
 const { asyncMethod } = intern
 
 const STORE_NAME = 'postgresql-store'
 const ACTION_ROLE = 'sql'
 
-module.exports = function (options) {
+
+function postgres_store(options) {
   const seneca = this
-
-  const ColumnNameParsing = {
-    fromColumnName: options.fromColumnName || _.identity,
-    toColumnName: options.toColumnName || _.identity
-  }
-  const QueryBuilder = require('./lib/query-builder')(ColumnNameParsing)
-
 
   const {
     fromColumnName = _.identity,
     toColumnName = _.identity
   } = options
-
-  const Q = require('./lib/qbuilder')
 
 
   let dbPool
@@ -117,7 +108,7 @@ module.exports = function (options) {
 
         return rows
           .map((row) => intern.deepXformKeys(fromColumnName, row))
-          .map((row) => intern.makeEntOfRow(row, qent))
+          .map((row) => intern.makeent(qent, row))
       })
 
       function isNativeQuery(q) {
@@ -176,3 +167,5 @@ module.exports = function (options) {
   return { name: store.name, tag: meta.tag }
 }
 
+
+module.exports = postgres_store
