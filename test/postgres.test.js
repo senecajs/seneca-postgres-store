@@ -83,13 +83,13 @@ describe('seneca postgres plugin', () => {
     }]))
 
     it('save with passing an external id', () => new Promise((resolve, reject) => {
-      var idPrefix = 'test_' + Uuid()
+      const idPrefix = 'test_' + Uuid()
 
       si.add({role: 'sql', hook: 'generate_id', target: POSTGRES_STORE_NAME}, function (args, done) {
         return done(null, {id: idPrefix + Uuid()})
       })
 
-      var foo = si.make('foo')
+      const foo = si.make('foo')
       foo.p1 = 'v1'
       foo.p2 = 'v2'
 
@@ -125,7 +125,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('should support opaque ids (array) and fields$', () => new Promise((resolve, reject) => {
-      var foo = si.make('foo')
+      const foo = si.make('foo')
 
       // QUESTION:
       // The name `ids` has a special meaning and hence should end in a '$',
@@ -173,7 +173,7 @@ describe('seneca postgres plugin', () => {
     afterEach(clearDb(si))
 
     beforeEach(() => new Promise((resolve, reject) => {
-      var Product = si.make('products')
+      const Product = si.make('products')
 
       return Async.series(
         [
@@ -182,7 +182,7 @@ describe('seneca postgres plugin', () => {
           },
 
           function create(next) {
-            var products = [
+            const products = [
               Product.make$({label: 'apple', price: '100'}),
               Product.make$({label: 'pear', price: '200'}),
               Product.make$({label: 'cherry', price: '300'})
@@ -207,7 +207,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use not equal ne$', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({price: {ne$: '200'}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -227,7 +227,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use not equal ne$ string', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({label: {ne$: 'pear'}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -247,7 +247,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use eq$', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({price: {eq$: '200'}}, function (err, lst) {
         if (err) {
@@ -266,7 +266,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use eq$ string', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({label: {eq$: 'pear'}}, function (err, lst) {
         if (err) {
@@ -285,7 +285,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use gte$', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({price: {gte$: '200'}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -305,7 +305,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use gt$', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({price: {gt$: '200'}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -324,7 +324,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use lte$', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({price: {lte$: '200'}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -344,7 +344,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use lt$', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({price: {lt$: '200'}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -363,7 +363,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use in$', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({price: {in$: ['200', '300']}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -383,7 +383,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use in$ string', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({label: {in$: ['cherry', 'pear']}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -403,7 +403,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use in$ one matching', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({price: {in$: ['200', '500', '700']}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -422,7 +422,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use in$ no matching', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({price: {in$: ['250', '500', '700']}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -441,7 +441,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use nin$ three matching', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({price: {nin$: ['250', '500', '700']}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -459,7 +459,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use nin$ one matching', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({price: {nin$: ['200', '500', '300']}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -478,7 +478,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use complex in$ and nin$', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({
         price: {nin$: ['250', '500', '300'],
@@ -502,7 +502,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use nin$ string', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({label: {nin$: ['cherry', 'pear']}, sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -521,7 +521,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use or$', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({or$: [{label: 'cherry'}, {price: '200'}], sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -541,7 +541,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use and$', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({and$: [{label: 'cherry'}, {price: '300'}], sort$: {price: 1}}, function (err, lst) {
         if (err) {
@@ -560,7 +560,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use and$ & or$', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({
         or$: [{price: {gte$: '200'}}, {and$: [{label: 'cherry'}, {price: '300'}]}],
@@ -583,7 +583,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use and$ & or$ and limit$', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({
         or$: [{price: {gte$: '200'}}, {and$: [{label: 'cherry'}, {price: '300'}]}],
@@ -608,7 +608,7 @@ describe('seneca postgres plugin', () => {
     }))
 
     it('use and$ & or$ and limit$, fields$ and skip$', () => new Promise((resolve, reject) => {
-      var product = si.make('products')
+      const product = si.make('products')
 
       return product.list$({
         price: {gte$: '200'},
@@ -730,7 +730,7 @@ describe('seneca postgres plugin', () => {
       }]))
 
       it('should not alter CamelCase column names', () => new Promise((resolve, reject) => {
-        var foo = si.make('foo')
+        const foo = si.make('foo')
 
         return foo.list$({native$: 'SELECT * FROM foo WHERE "fooBar" = \'fooBar\''}, function (err, res) {
           if (err) {
@@ -749,7 +749,7 @@ describe('seneca postgres plugin', () => {
       }))
 
       it('should not alter snake_case column names', () => new Promise((resolve, reject) => {
-        var foo = si.make('foo')
+        const foo = si.make('foo')
 
         return foo.list$({native$: 'SELECT * FROM foo WHERE bar_foo = \'bar_foo\''}, function (err, res) {
           if (err) {
@@ -789,7 +789,7 @@ describe('seneca postgres plugin', () => {
       }]))
 
       it('should convert the CamelCase column name to snake case', () => new Promise((resolve, reject) => {
-        var foo = si.make('foo')
+        const foo = si.make('foo')
 
         return foo.list$({native$: 'SELECT * FROM foo WHERE "bar_foo" = \'barFoo\''}, function (err, res) {
           if (err) {
@@ -808,7 +808,7 @@ describe('seneca postgres plugin', () => {
       }))
 
 
-      var UpperCaseRegExp = /[A-Z]/g
+      const UpperCaseRegExp = /[A-Z]/g
 
       // Replace "camelCase" with "camel_case"
       function camelToSnakeCase (field) {
@@ -820,9 +820,10 @@ describe('seneca postgres plugin', () => {
 
       // Replace "snake_case" with "snakeCase"
       function snakeToCamelCase (column) {
-        var arr = column.split('_')
-        var field = arr[0]
-        for (var i = 1; i < arr.length; i++) {
+        const arr = column.split('_')
+        let field = arr[0]
+
+        for (let i = 1; i < arr.length; i++) {
           field += arr[i][0].toUpperCase() + arr[i].slice(1, arr[i].length)
         }
 
