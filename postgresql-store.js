@@ -18,6 +18,13 @@ module.exports = function (options) {
     toColumnName: options.toColumnName || _.identity
   }
   const QueryBuilder = require('./lib/query-builder')(ColumnNameParsing)
+
+
+  const {
+    fromColumnName = _.identity,
+    toColumnName = _.identity
+  } = options
+
   const Q = require('./lib/qbuilder')
 
 
@@ -48,7 +55,7 @@ module.exports = function (options) {
       const seneca = this
 
       return intern.withDbClient(dbPool, async (client) => {
-        const ctx = { seneca, client }
+        const ctx = { seneca, client, fromColumnName, toColumnName }
 
         const { ent, q } = msg
         const { auto_increment$: autoIncrement = false } = q
@@ -97,7 +104,7 @@ module.exports = function (options) {
       const seneca = this
 
       return intern.withDbClient(dbPool, async (client) => {
-        const ctx = { seneca, client }
+        const ctx = { seneca, client, fromColumnName, toColumnName }
         const { qent, q } = msg
 
         const nativeQuery = isNativeQuery(q)
@@ -108,7 +115,9 @@ module.exports = function (options) {
 
         const { rows } = await intern.execQuery(nativeQuery, ctx)
 
-        return rows.map(row => intern.makeEntOfRow(row, qent))
+        return rows
+          .map((row) => intern.deepXformKeys(fromColumnName, row))
+          .map((row) => intern.makeEntOfRow(row, qent))
       })
 
       function isNativeQuery(q) {

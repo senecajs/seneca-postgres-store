@@ -799,7 +799,6 @@ describe('seneca postgres plugin', () => {
           try {
             expect(res.length).to.equal(1)
             expect(res[0].barFoo).to.equal('barFoo')
-
           } catch (err) {
             return reject(err)
           }
