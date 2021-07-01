@@ -127,6 +127,14 @@ describe('seneca postgres plugin', () => {
     it('should support opaque ids (array) and fields$', () => new Promise((resolve, reject) => {
       var foo = si.make('foo')
 
+      // QUESTION:
+      // The name `ids` has a special meaning and hence should end in a '$',
+      // i.e. - `ids$`. It is possible that a client has an array or a JSON
+      // column, called 'ids', in a table, which would result in a conflict.
+      // Should we rename `ids` to `ids$` or to 'id', even?
+      //
+      // --- 2021-07-01 - lilsweetcaligula
+      //
       return foo.list$({ids: ['foo1', 'foo2'], fields$: ['p1']}, function (err, out) {
         if (err) {
           return reject(err)
