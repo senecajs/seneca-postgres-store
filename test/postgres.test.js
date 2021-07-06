@@ -721,7 +721,7 @@ describe('seneca postgres plugin', () => {
         bar_foo: 'bar_foo'
       }]))
 
-      it('should not alter CamelCase column names', () => new Promise((resolve, reject) => {
+      it('should not alter CamelCase column names, in list$', () => new Promise((resolve, reject) => {
         const foo = si.make('foo')
 
         return foo.list$({native$: 'SELECT * FROM foo WHERE "fooBar" = \'fooBar\''}, function (err, res) {
@@ -740,7 +740,7 @@ describe('seneca postgres plugin', () => {
         })
       }))
 
-      it('should not alter snake_case column names', () => new Promise((resolve, reject) => {
+      it('should not alter snake_case column names, in list$', () => new Promise((resolve, reject) => {
         const foo = si.make('foo')
 
         return foo.list$({native$: 'SELECT * FROM foo WHERE bar_foo = \'bar_foo\''}, function (err, res) {
@@ -756,6 +756,25 @@ describe('seneca postgres plugin', () => {
           } catch (err) {
             return reject(err)
           }
+        })
+      }))
+
+      it('should not alter snake_case column names, in list$', () => new Promise((resolve, reject) => {
+        const foo = si.make('foo')
+
+        return foo.list$({ bar_foo: 'bar_foo' }, function (err, res) {
+          if (err) {
+            return reject(err)
+          }
+
+          try {
+            expect(res.length).to.equal(1)
+            expect(res[0].bar_foo).to.equal('bar_foo')
+          } catch (err) {
+            return reject(err)
+          }
+
+          return resolve()
         })
       }))
     })
@@ -780,10 +799,29 @@ describe('seneca postgres plugin', () => {
         barFoo: 'barFoo'
       }]))
 
-      it('should convert the CamelCase column name to snake case', () => new Promise((resolve, reject) => {
+      it('should convert the CamelCase column name to snake case, in list$', () => new Promise((resolve, reject) => {
         const foo = si.make('foo')
 
         return foo.list$({native$: 'SELECT * FROM foo WHERE "bar_foo" = \'barFoo\''}, function (err, res) {
+          if (err) {
+            return reject(err)
+          }
+
+          try {
+            expect(res.length).to.equal(1)
+            expect(res[0].barFoo).to.equal('barFoo')
+          } catch (err) {
+            return reject(err)
+          }
+
+          return resolve()
+        })
+      }))
+
+      it('should convert the CamelCase column name to snake case, in list$', () => new Promise((resolve, reject) => {
+        const foo = si.make('foo')
+
+        return foo.list$({ barFoo: 'barFoo' }, function (err, res) {
           if (err) {
             return reject(err)
           }

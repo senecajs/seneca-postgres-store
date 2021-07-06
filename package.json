@@ -69,7 +69,6 @@
     "eslint-config-seneca": "3.x.x",
     "eslint-plugin-hapi": "4.x.x",
     "eslint-plugin-standard": "2.x.x",
-    "lodash": "4.15.0",
     "seneca": "3.23.3",
     "seneca-entity": "13.0.0",
     "seneca-store-test": "4.0.0"

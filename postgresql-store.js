@@ -1,4 +1,3 @@
-const _ = require('lodash')
 const Assert = require('assert')
 const Pg = require('pg')
 
@@ -14,8 +13,8 @@ function postgres_store(options) {
   const seneca = this
 
   const {
-    fromColumnName = _.identity,
-    toColumnName = _.identity
+    fromColumnName = intern.identity,
+    toColumnName = intern.identity
   } = options
 
 
