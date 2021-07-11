@@ -44,7 +44,7 @@ jobs:
         run: npm install
 
       - name: Connect to PostgreSQL
-        run: psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -f "./docker/dbschema.sql"
+        run: psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -f "./test/support/docker/dbschema.sql"
         env:
           POSTGRES_USER: "senecatest"
           POSTGRES_DB: "senecatest"
