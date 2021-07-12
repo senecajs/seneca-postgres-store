@@ -3,7 +3,7 @@ postgres:
   ports:
     - "5432:5432"
   environment:
-    POSTGRES_PASSWORD: senecatest
-    POSTGRES_DB: senecatest
+    POSTGRES_PASSWORD: senecatest_2086hab80y
+    POSTGRES_DB: senecatest_71v94h
     POSTGRES_USER: senecatest
 

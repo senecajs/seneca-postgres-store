@@ -5,7 +5,7 @@ const { before, beforeEach, afterEach, describe, it } = lab
 const { expect } = require('code')
 
 const PgStore = require('..')
-const DefaultPgConfig = require('./default_config.json')
+const DbConfig = require('./support/db/config')
 const Shared = require('seneca-store-test')
 
 const Async = require('async')
@@ -869,7 +869,7 @@ function makeSenecaForTest(opts = {}) {
   si.use('seneca-entity', { mem_store: false })
 
   const { postgres_opts = {} } = opts
-  si.use(PgStore, { ...DefaultPgConfig, ...postgres_opts })
+  si.use(PgStore, { ...DbConfig, ...postgres_opts })
 
   return si
 }
