@@ -49,3 +49,7 @@ jobs:
           POSTGRES_USER: "senecatest"
           POSTGRES_DB: "senecatest"
 
+
+      - name: Run the tests 
+        run: npm test
+
