@@ -25,8 +25,8 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_PASSWORD: senecatest
-          POSTGRES_DB: senecatest
+          POSTGRES_PASSWORD: senecatest_ci_07y71809h1
+          POSTGRES_DB: senecatest_ci_629vv14
           POSTGRES_USER: senecatest
         ports:
           - 5432:5432
@@ -47,7 +47,7 @@ jobs:
         run: psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -f "./test/support/docker/dbschema.sql"
         env:
           POSTGRES_USER: "senecatest"
-          POSTGRES_DB: "senecatest"
+          POSTGRES_DB: "senecatest_ci_629vv14"
 
 
       - name: Run the tests 
