@@ -40,15 +40,15 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: npm install
-
       - name: Connect to PostgreSQL
-        run: psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -f "./test/support/docker/dbschema.sql"
+        run: PGPASSWORD="${POSTGRES_PASSWORD}" psql -h localhost -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -f "./test/support/docker/dbschema.sql"
         env:
           POSTGRES_USER: "senecatest"
+          POSTGRES_PASSWORD: senecatest_ci_07y71809h1
           POSTGRES_DB: "senecatest_ci_629vv14"
 
+      - name: Install dependencies
+        run: npm install
 
       - name: Run the tests 
         run: npm test
