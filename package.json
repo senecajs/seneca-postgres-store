@@ -71,6 +71,6 @@
     "eslint-plugin-standard": "2.x.x",
     "seneca": "3.23.3",
     "seneca-entity": "13.0.0",
-    "seneca-store-test": "4.0.0"
+    "seneca-store-test": "4.1.0"
   }
 }
