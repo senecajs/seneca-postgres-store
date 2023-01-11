@@ -9,7 +9,7 @@ const DbConfig = require('./support/db/config')
 const Shared = require('seneca-store-test')
 
 const Async = require('async')
-const Uuid = require('uuid')
+const Uuid = require('uuid').v4
 const Util = require('util')
 
 const POSTGRES_STORE_NAME = 'postgresql-store'

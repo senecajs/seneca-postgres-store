@@ -61,16 +61,16 @@
 
   },
   "dependencies": {
-    "pg": "8.6.0",
-    "uuid": "3.4.0"
+    "pg": "8.8.0",
+    "uuid": "9.0.0"
   },
   "devDependencies": {
     "@hapi/code": "8",
     "@hapi/lab": "23",
-    "async": "2.0.x",
+    "async": "3.2.x",
     "code": "3.0.x",
-    "coveralls": "2.11.x",
-    "docco": "0.7.x",
+    "coveralls": "3.1.x",
+    "docco": "0.9.x",
     "seneca": "3.29.0",
     "seneca-entity": "19.0.0",
     "seneca-store-test": "5.2.0"
