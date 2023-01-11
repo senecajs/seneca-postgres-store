@@ -41,10 +41,12 @@ function postgres_store(options) {
       dbPool.end().then(done).catch(done)
     },
 
-    save: asyncMethod(async function (msg) {
+    save: asyncMethod(async function (msg, meta) {
       const seneca = this
 
-      return intern.withDbClient(dbPool, async (client) => {
+      let ctx = intern.buildCtx(seneca, msg, meta)
+      
+      return intern.withDbClient(dbPool, ctx, async (client) => {
         const ctx = { seneca, client, fromColumnName, toColumnName }
 
         const { ent, q } = msg
@@ -79,10 +81,12 @@ function postgres_store(options) {
       })
     }),
 
-    load: asyncMethod(async function (msg) {
+    
+    load: asyncMethod(async function (msg, meta) {
       const seneca = this
-
-      return intern.withDbClient(dbPool, async (client) => {
+      let ctx = intern.buildCtx(seneca, msg, meta)
+      
+      return intern.withDbClient(dbPool, ctx, async (client) => {
         const ctx = { seneca, client }
         const { qent, q } = msg
 
@@ -90,10 +94,13 @@ function postgres_store(options) {
       })
     }),
 
-    list: asyncMethod(async function (msg) {
+    
+    list: asyncMethod(async function (msg, meta) {
       const seneca = this
 
-      return intern.withDbClient(dbPool, async (client) => {
+      let ctx = intern.buildCtx(seneca, msg, meta)
+      
+      return intern.withDbClient(dbPool, ctx, async (client) => {
         const ctx = { seneca, client, fromColumnName, toColumnName }
         const { qent, q } = msg
 
@@ -131,10 +138,12 @@ function postgres_store(options) {
       }
     }),
 
-    remove: asyncMethod(async function (msg) {
+    remove: asyncMethod(async function (msg, meta) {
       const seneca = this
 
-      return intern.withDbClient(dbPool, async (client) => {
+      let ctx = intern.buildCtx(seneca, msg, meta)
+      
+      return intern.withDbClient(dbPool, ctx, async (client) => {
         const ctx = { seneca, client }
         const { qent, q } = msg
 
@@ -162,6 +171,39 @@ function postgres_store(options) {
       return done(null, { id })
     })
 
+
+  seneca.add('sys:entity,transaction:begin', function(msg,reply) {
+    // NOTE: `BEGIN` is called in intern.withDbClient
+    reply({
+      handle: { id: this.util.Nid(), name: 'postgres' }
+    })
+  })
+
+  seneca.add('sys:entity,transaction:end', function(msg,reply) {
+    let transaction = msg.details()
+    let client = transaction.client
+
+    client.query('COMMIT')
+      .then(()=>{
+        reply({
+          done: true
+        })
+      })
+      .catch((err)=>reply(err))
+  })
+
+  seneca.add('sys:entity,transaction:rollback', function(msg,reply) {
+    let transaction = msg.details()
+    let client = transaction.client
+
+    client.query('ROLLBACK')
+      .then(()=>{
+        reply({
+          done: false, rollback: true
+        })
+      })
+      .catch((err)=>reply(err))
+  })
 
   return { name: store.name, tag: meta.tag }
 }

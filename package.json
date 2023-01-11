@@ -48,29 +48,31 @@
     "build": "docker-compose build",
     "start": "docker-compose up",
     "stop": "docker-compose kill",
-    "test": "lab test -r console -v -t 60",
+    "test": "lab test -r console -v -t 60 -I AggregateError,atob,btoa,AbortController,AbortSignal,EventTarget,Event,MessageChannel,MessagePort,MessageEvent,performance",
     "test-some": "lab test -r console -v -g ",
-    "lint": "lab -dL",
     "coveralls": "lab test/*.test.js -v -r lcov | coveralls",
-    "coverage": "lab -v -P test -L -t 80 -r html > docs/coverage.html",
-    "annotate": "docco lib/postgresql-store.js -o docs/annotated"
+    "coverage": "lab -v -P test -t 80 -r html > docs/coverage.html",
+    "annotate": "docco lib/postgresql-store.js -o docs/annotated",
+    "reset": "npm run clean && npm i && npm test",
+    "clean": "rm -rf node_modules dist package-lock.json yarn.lock",
+    "repo-tag": "REPO_VERSION=`node -e \"console.log(require('./package').version)\"` && echo TAG: v$REPO_VERSION && git commit -a -m v$REPO_VERSION && git push && git tag v$REPO_VERSION && git push --tags;",
+    "repo-publish": "npm run clean && npm i --registry=https://registry.npmjs.org && npm run repo-publish-quick",
+    "repo-publish-quick": "npm run prettier && npm test && npm run repo-tag && npm publish --access public --registry=https://registry.npmjs.org"
+
   },
   "dependencies": {
     "pg": "8.6.0",
     "uuid": "3.4.0"
   },
   "devDependencies": {
-    "@hapi/code": "8.0.3",
-    "@hapi/lab": "24.0.0",
+    "@hapi/code": "8",
+    "@hapi/lab": "23",
     "async": "2.0.x",
     "code": "3.0.x",
     "coveralls": "2.11.x",
     "docco": "0.7.x",
-    "eslint-config-seneca": "3.x.x",
-    "eslint-plugin-hapi": "4.x.x",
-    "eslint-plugin-standard": "2.x.x",
-    "seneca": "3.23.3",
-    "seneca-entity": "13.0.0",
-    "seneca-store-test": "4.1.0"
+    "seneca": "3.29.0",
+    "seneca-entity": "19.0.0",
+    "seneca-store-test": "5.2.0"
   }
 }

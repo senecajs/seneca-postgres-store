@@ -151,6 +151,68 @@ describe('seneca postgres plugin', () => {
     }))
   })
 
+  describe('transaction', function () {
+    const si = makeSenecaForTest()
+    si.use('promisify')
+    
+    before(() => {
+      return new Promise(done => {
+        si.ready(done)
+      })
+    })
+
+    beforeEach(clearDb(si))
+
+    afterEach(clearDb(si))
+
+    it('happy', async () => {
+      let s0 = await si.entity.begin()
+      await s0.entity('foo').data$({p1:'t1'}).save$()
+      let tx0 = await s0.entity.end()
+
+      expect(tx0).include({
+        begin: { handle: { name: 'postgres' } },
+        canon: {},
+        handle: { name: 'postgres' },
+        trace: [ { msg: {}, meta: {} } ],
+        end: { done: true },
+      })
+      // console.log(tx0)
+      // console.dir(tx0.trace)
+
+      let foos = await si.entity('foo').list$()
+      expect(foos.length).equal(1)
+      expect(foos[0].p1).equal('t1')
+    })
+
+    
+    it('rollback', async () => {
+      let s0 = await si.entity.begin()
+
+      await s0.entity('foo').data$({p1:'t1'}).save$()
+
+      let tx0 = await s0.entity.rollback()
+
+      expect(tx0).include({
+        begin: { handle: { name: 'postgres' } },
+        canon: {},
+        handle: { name: 'postgres' },
+        trace: [ { msg: {}, meta: {} } ],
+        end: { done: false, rollback: true },
+      })
+      // console.log(tx0)
+      // console.dir(tx0.trace)
+
+      let foos = await si.entity('foo').list$()
+      expect(foos.length).equal(0)
+    })
+
+    // TODO: rollback when error
+    // TODO: preserved in children
+    
+  })
+
+  
   describe('postgres store API V2.0.0', function () {
     const si = makeSenecaForTest()
 
@@ -864,7 +926,8 @@ describe('seneca postgres plugin', () => {
 })
 
 function makeSenecaForTest(opts = {}) {
-  const si = Seneca({ log: 'test' })
+  // const si = Seneca({ log: 'test' })
+  const si = Seneca().test()
 
   si.use('seneca-entity', { mem_store: false })
 
