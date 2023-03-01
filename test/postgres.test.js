@@ -152,7 +152,7 @@ describe('seneca postgres plugin', () => {
   })
 
   describe('transaction', function () {
-    const si = makeSenecaForTest()
+    const si = makeSenecaForTest({entity_opts: { transaction: {active:true} }})
     si.use('promisify')
     
     before(() => {
@@ -171,11 +171,8 @@ describe('seneca postgres plugin', () => {
       let tx0 = await s0.entity.end()
 
       expect(tx0).include({
-        begin: { handle: { name: 'postgres' } },
-        canon: {},
         handle: { name: 'postgres' },
-        trace: [ { msg: {}, meta: {} } ],
-        end: { done: true },
+        result: { done: true },
       })
       // console.log(tx0)
       // console.dir(tx0.trace)
@@ -194,11 +191,8 @@ describe('seneca postgres plugin', () => {
       let tx0 = await s0.entity.rollback()
 
       expect(tx0).include({
-        begin: { handle: { name: 'postgres' } },
-        canon: {},
         handle: { name: 'postgres' },
-        trace: [ { msg: {}, meta: {} } ],
-        end: { done: false, rollback: true },
+        result: { done: false },
       })
       // console.log(tx0)
       // console.dir(tx0.trace)
@@ -207,7 +201,39 @@ describe('seneca postgres plugin', () => {
       expect(foos.length).equal(0)
     })
 
-    // TODO: rollback when error
+
+    it('rollback-on-error', async () => {
+      si.message('foo:red', async function foo_red(msg) {
+        await this.entity('foo').data$({p1:'t1'}).save$()
+        throw new Error('BAD')
+        await this.entity('foo').data$({p1:'t2'}).save$()
+        return {ok:true}
+      })
+
+      let s0 = await si.entity.begin()
+
+      // console.log(s0.entity)
+      
+      try {
+        await s0.post('foo:red')
+        expect(false).toEqual(true)
+      }
+      catch(err) {
+        // console.log(err.message)
+
+        // Data NOT saved as rolled back
+        let foos = await s0.entity('foo').list$()
+        // console.log('FOOS', foos)
+        expect(foos.length).equal(0)
+      
+        let t0 = s0.entity.state()
+        // console.log(t0.transaction.trace)
+        expect(t0.transaction.trace.length).equal(1)
+      }
+    })
+
+    
+
     // TODO: preserved in children
     
   })
@@ -926,12 +952,15 @@ describe('seneca postgres plugin', () => {
 })
 
 function makeSenecaForTest(opts = {}) {
-  // const si = Seneca({ log: 'test' })
   const si = Seneca().test()
 
-  si.use('seneca-entity', { mem_store: false })
+  const { entity_opts = {}, postgres_opts = {} } = opts
+  
+  si.use('seneca-entity', {
+    mem_store: false,
+    ...entity_opts
+  })
 
-  const { postgres_opts = {} } = opts
   si.use(PgStore, { ...DbConfig, ...postgres_opts })
 
   return si

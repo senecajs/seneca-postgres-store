@@ -172,10 +172,11 @@ function postgres_store(options) {
     })
 
 
+  
   seneca.add('sys:entity,transaction:begin', function(msg,reply) {
     // NOTE: `BEGIN` is called in intern.withDbClient
     reply({
-      handle: { id: this.util.Nid(), name: 'postgres' }
+      get_handle: () => ({ id: this.util.Nid(), name: 'postgres' })
     })
   })
 
@@ -205,6 +206,9 @@ function postgres_store(options) {
       .catch((err)=>reply(err))
   })
 
+  // seneca.act('sys:entity,hook:intercept,intercept:act_error')
+
+  
   return { name: store.name, tag: meta.tag }
 }
 

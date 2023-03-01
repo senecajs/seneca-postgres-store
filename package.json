@@ -61,7 +61,7 @@
 
   },
   "dependencies": {
-    "pg": "8.8.0",
+    "pg": "8.9.0",
     "uuid": "9.0.0"
   },
   "devDependencies": {
@@ -71,8 +71,8 @@
     "code": "3.0.x",
     "coveralls": "3.1.x",
     "docco": "0.9.x",
-    "seneca": "3.29.0",
-    "seneca-entity": "19.0.0",
+    "seneca": "3.30.0",
+    "seneca-entity": "20.0.1",
     "seneca-store-test": "5.2.0"
   }
 }
