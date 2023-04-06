@@ -173,14 +173,14 @@ function postgres_store(options) {
 
 
   
-  seneca.add('sys:entity,transaction:begin', function(msg,reply) {
-    // NOTE: `BEGIN` is called in intern.withDbClient
+  seneca.add('sys:entity,transaction:transaction', function(msg,reply) {
+    // NOTE: `transaction` is called in intern.withDbClient
     reply({
       get_handle: () => ({ id: this.util.Nid(), name: 'postgres' })
     })
   })
 
-  seneca.add('sys:entity,transaction:end', function(msg,reply) {
+  seneca.add('sys:entity,transaction:commit', function(msg,reply) {
     let transaction = msg.details()
     let client = transaction.client
 
