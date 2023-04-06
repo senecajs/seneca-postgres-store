@@ -72,7 +72,7 @@
     "coveralls": "3.1.x",
     "docco": "0.9.x",
     "seneca": "3.30.0",
-    "seneca-entity": "20.0.1",
+    "seneca-entity": "22.0.0",
     "seneca-store-test": "5.2.0"
   }
 }
