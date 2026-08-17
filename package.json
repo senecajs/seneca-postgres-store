@@ -1,5 +1,5 @@
 {
-  "name": "seneca-postgres-store",
+  "name": "@seneca/postgres-store",
   "version": "2.4.0",
   "description": "Seneca data store plugin for PostgreSQL",
   "main": "postgresql-store.js",
@@ -58,7 +58,6 @@
     "repo-tag": "REPO_VERSION=`node -e \"console.log(require('./package').version)\"` && echo TAG: v$REPO_VERSION && git commit -a -m v$REPO_VERSION && git push && git tag v$REPO_VERSION && git push --tags;",
     "repo-publish": "npm run clean && npm i --registry=https://registry.npmjs.org && npm run repo-publish-quick",
     "repo-publish-quick": "npm test && npm run repo-tag && npm publish --access public --registry=https://registry.npmjs.org"
-
   },
   "dependencies": {
     "pg": "8.9.0",
