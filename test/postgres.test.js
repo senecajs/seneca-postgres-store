@@ -166,9 +166,9 @@ describe('seneca postgres plugin', () => {
     afterEach(clearDb(si))
 
     it('happy', async () => {
-      let s0 = await si.entity.begin()
+      let s0 = await si.entity.transaction()
       await s0.entity('foo').data$({p1:'t1'}).save$()
-      let tx0 = await s0.entity.end()
+      let tx0 = await s0.entity.commit()
 
       expect(tx0).include({
         handle: { name: 'postgres' },
@@ -184,7 +184,7 @@ describe('seneca postgres plugin', () => {
 
     
     it('rollback', async () => {
-      let s0 = await si.entity.begin()
+      let s0 = await si.entity.transaction()
 
       await s0.entity('foo').data$({p1:'t1'}).save$()
 
@@ -210,7 +210,7 @@ describe('seneca postgres plugin', () => {
         return {ok:true}
       })
 
-      let s0 = await si.entity.begin()
+      let s0 = await si.entity.transaction()
 
       // console.log(s0.entity)
       
