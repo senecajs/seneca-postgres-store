@@ -26,6 +26,7 @@ seneca.use('@seneca/postgres-store', {
 })
 ```
 
-The functions are applied to saved data, query fields and `native$`
-result rows. They are not applied to the SQL text of a `native$` query,
+The functions are applied to saved data, `list$` query fields and
+`native$` result rows. They are currently not applied to the query fields
+of `load$` and `remove$`, so query those by `id` or by real column names. They are not applied to the SQL text of a `native$` query,
 so write real column names there.
