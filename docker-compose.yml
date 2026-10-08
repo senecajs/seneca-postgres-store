@@ -1,9 +1,19 @@
-postgres:
-  build: ./test/support/docker
-  ports:
-    - "5432:5432"
-  environment:
-    POSTGRES_PASSWORD: senecatest_2086hab80y
-    POSTGRES_DB: senecatest_71v94h
-    POSTGRES_USER: senecatest
+name: seneca-postgres-store
 
+services:
+  postgres:
+    image: postgres:18
+    container_name: seneca-postgres-store-postgres
+    ports:
+      - "55432:5432"
+    environment:
+      POSTGRES_USER: senecatest
+      POSTGRES_PASSWORD: senecatest_2086hab80y
+      POSTGRES_DB: senecatest_71v94h
+    volumes:
+      - ./test/support/dbschema.sql:/docker-entrypoint-initdb.d/dbschema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U senecatest -d senecatest_71v94h"]
+      interval: 5s
+      timeout: 5s
+      retries: 20

@@ -2,7 +2,7 @@ const Seneca = require('seneca')
 const Lab = require('@hapi/lab')
 const lab = (exports.lab = Lab.script())
 const { before, beforeEach, afterEach, describe, it } = lab
-const { expect } = require('code')
+const { expect } = require('@hapi/code')
 
 const PgStore = require('..')
 const DbConfig = require('./support/db/config')
@@ -151,7 +151,15 @@ describe('seneca postgres plugin', () => {
     }))
   })
 
-  describe('transaction', function () {
+  // Transactions need entity.begin/end/rollback/state, which only
+  // seneca-entity 21.x and 22.x provide. Skip when they are absent.
+  const entityHasTransactions =
+    /^2[12]\./.test(require('seneca-entity/package.json').version)
+
+  describe('transaction', { skip: !entityHasTransactions }, function () {
+    if (!entityHasTransactions) {
+      return it('requires seneca-entity 21.x or 22.x', { skip: true }, () => {})
+    }
     const si = makeSenecaForTest({entity_opts: { transaction: {active:true} }})
     si.use('promisify')
     

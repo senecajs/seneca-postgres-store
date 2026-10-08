@@ -1,3 +1,18 @@
+## 2.5.0 2026-10-08
+
+* Seneca 4 prerelease support (4.0.0-rc5 and 4.0.0): the store now uses
+  the `entity/init` export of seneca-entity, as Seneca 4 and current
+  seneca-entity no longer provide `seneca.store.init`.
+* Works with seneca-entity 28: a missing `seneca.entity.state()` means
+  no transaction (previously every action threw).
+* pg upgraded to ^8.23.1. Tested on Node 24 and 22 against PostgreSQL 18.
+* Tests: @hapi/lab 26, @hapi/code 9, seneca-store-test 6. Transaction
+  tests run only with seneca-entity 21.x or 22.x.
+* Local services through `docker-compose.yml` (`npm run services:up`,
+  `npm run services:down`); settings from `SENECA_TEST_PG_*`.
+* Documentation reorganised into `docs/` (tutorials, how-to, reference,
+  explanation). Removed `.travis.yml` and coveralls.
+
 ## 2.3.0 26-08-2016
 
 * Updated dependencies
