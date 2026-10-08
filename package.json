@@ -1,6 +1,6 @@
 {
   "name": "@seneca/postgres-store",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Seneca data store plugin for PostgreSQL",
   "main": "postgresql-store.js",
   "author": "Marian Radulescu",
@@ -45,13 +45,11 @@
     "lib"
   ],
   "scripts": {
-    "build": "docker-compose build",
-    "start": "docker-compose up",
-    "stop": "docker-compose kill",
-    "test": "lab test -r console -v -t 60 -I AggregateError,atob,btoa,AbortController,AbortSignal,EventTarget,Event,MessageChannel,MessagePort,MessageEvent,performance",
-    "test-some": "lab test -r console -v -g ",
-    "coveralls": "lab test/*.test.js -v -r lcov | coveralls",
-    "coverage": "lab -v -P test -t 80 -r html > docs/coverage.html",
+    "test": "lab test -r console -v -l -t 60",
+    "test-some": "lab test -r console -v -l -g ",
+    "coverage": "lab -v -l -P test -t 0 -r html > docs/coverage.html",
+    "services:up": "docker compose up -d --wait",
+    "services:down": "docker compose down -v",
     "annotate": "docco lib/postgresql-store.js -o docs/annotated",
     "reset": "npm run clean && npm i && npm test",
     "clean": "rm -rf node_modules dist package-lock.json yarn.lock",
@@ -60,18 +58,17 @@
     "repo-publish-quick": "npm test && npm run repo-tag && npm publish --access public --registry=https://registry.npmjs.org"
   },
   "dependencies": {
-    "pg": "8.9.0",
+    "pg": "^8.23.1",
     "uuid": "9.0.0"
   },
   "devDependencies": {
-    "@hapi/code": "8",
-    "@hapi/lab": "23",
-    "async": "3.2.x",
-    "code": "3.0.x",
-    "coveralls": "3.1.x",
+    "@hapi/code": "^9.0.3",
+    "@hapi/lab": "^26.0.1",
+    "async": "^3.2.6",
     "docco": "0.9.x",
-    "seneca": "3.30.0",
-    "seneca-entity": "20.0.1",
-    "seneca-store-test": "5.2.0"
+    "seneca": "^4.0.0-rc5",
+    "seneca-entity": "^28.1.0",
+    "seneca-promisify": "^3.7.2",
+    "seneca-store-test": "^6.0.0"
   }
 }
