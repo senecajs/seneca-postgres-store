@@ -2,7 +2,7 @@
 
 ## Lifecycle
 
-The plugin registers its store functions with seneca-entity and adds
+The plugin registers its store functions with `@seneca/entity` and adds
 an `init:postgresql-store` action. When Seneca initialises the plugin
 it creates one `pg.Pool`. Every entity action checks out a client,
 runs its SQL and releases the client. `seneca.close()` reaches the
@@ -22,19 +22,25 @@ application can override id generation without changing the store.
 
 ## Transactions
 
-seneca-entity 21.x and 22.x had a transaction API
-(`entity.begin()`, `end()`, `rollback()`, `state()`). With those
-versions the store runs `BEGIN` on the first action of a transaction
-and reuses the same client until `COMMIT` or `ROLLBACK`. Later
-seneca-entity releases removed the API; the store detects that
-`entity.state` is missing and runs every action on its own pooled
-client.
+`seneca-entity` 21.0.x had a transaction API (`entity.begin()`,
+`end()`, `rollback()`, `state()`). With it the store runs `BEGIN` on
+the first action of a transaction and reuses the same client until
+`COMMIT` or `ROLLBACK`. `seneca-entity` 21.1 and 22 changed that API,
+and `@seneca/entity` 29, the entity plugin for Seneca 4, has none. The
+store detects that `entity.state` is missing and runs every action on
+its own pooled client.
+
+The transaction code is kept unchanged. It still works on Seneca 4 with
+`seneca-entity` 21.0.2 loaded in place of `@seneca/entity`, but that is
+not a supported setup, and its tests run only when that version is
+installed by hand (see
+[Run the tests locally](../how-to/run-the-tests-locally.md#transaction-tests)).
 
 ## Seneca 3 versus Seneca 4
 
-* Seneca 4 does not decorate `seneca.store`. The store uses the
-  `entity/init` export of seneca-entity, falling back to
-  `seneca.store.init` on older setups.
+* Seneca 4 does not decorate `seneca.store`. The store registers
+  through the `entity/init` export of `@seneca/entity`, so load the
+  entity plugin first.
 * Seneca 4 does not wrap action errors, so PostgreSQL errors reach
   the callback with their own message.
 * Options come only from `use()` or `options.plugin`.

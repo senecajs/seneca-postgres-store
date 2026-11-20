@@ -6,11 +6,10 @@ list and remove an entity.
 ## 1. Install
 
 ```sh
-npm install seneca seneca-entity @seneca/postgres-store
+npm install seneca@^4 @seneca/entity @seneca/postgres-store
 ```
 
-Until Seneca 4.0.0 is published, install the prerelease with
-`npm install seneca@4.0.0-rc5`.
+You need Node.js 24 or later.
 
 ## 2. Start a database
 
@@ -33,7 +32,7 @@ const env = process.env
 
 const seneca = Seneca({ legacy: false })
   .test()
-  .use('entity', { mem_store: false })
+  .use('@seneca/entity', { mem_store: false })
   .use(require('../../postgresql-store.js'), {
     name: env.SENECA_TEST_PG_DATABASE || 'senecatest_71v94h',
     host: env.SENECA_TEST_PG_HOST || '127.0.0.1',
@@ -70,7 +69,7 @@ In your own project use `.use('@seneca/postgres-store', {...})`.
 node docs/examples/getting-started.js
 ```
 
-Output with `seneca@4.0.0-rc5` (the id is a random UUID):
+Output (the id is a random UUID):
 
 ```
 saved: 5b106ee0-8195-41b5-bd30-851b56b45f13 a
@@ -83,7 +82,7 @@ closed
 
 ## What happened
 
-* `seneca-entity` provides the entity API (`entity`, `save$`, ...).
+* `@seneca/entity` provides the entity API (`entity`, `save$`, ...).
   `mem_store: false` stops it loading the in-memory store.
 * The plugin opened a `pg` connection pool when Seneca initialised it.
 * `save$` without an id generated a UUID and ran an `INSERT`.

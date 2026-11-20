@@ -1,7 +1,7 @@
 # Messages
 
-The store is registered with seneca-entity under the name
-`postgresql-store`. seneca-entity routes entity operations to it.
+The store is registered with `@seneca/entity` under the name
+`postgresql-store`. `@seneca/entity` routes entity operations to it.
 
 ## Entity operations
 
@@ -14,7 +14,7 @@ The store is registered with seneca-entity under the name
 | `role:entity,cmd:close` | `seneca.close()` | Ends the `pg` pool. |
 | `role:entity,cmd:native` | `ent.native$()` | A client checked out from the pool. The caller must `release()` it. |
 
-On Seneca 4 seneca-entity uses `sys:entity` in place of `role:entity`;
+On Seneca 4 `@seneca/entity` uses `sys:entity` in place of `role:entity`;
 the behaviour is the same. Errors from PostgreSQL are replied
 unchanged.
 
@@ -28,8 +28,8 @@ unchanged.
 | `sys:entity,transaction:end` | transaction details | Runs `COMMIT`; replies `{ done: true }`. |
 | `sys:entity,transaction:rollback` | transaction details | Runs `ROLLBACK`; replies `{ done: false, rollback: true }`. |
 
-The transaction actions are only called by seneca-entity 21.x and
-22.x.
+The transaction actions are only called by `seneca-entity` 21.0.x.
+`@seneca/entity` has no transaction API.
 
 Example of a custom id generator:
 

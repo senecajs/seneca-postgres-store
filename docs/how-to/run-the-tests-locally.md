@@ -2,7 +2,7 @@
 
 Goal: run `npm test` against a real PostgreSQL started by Docker.
 
-1. Use Node 24 (or 22) and install dependencies:
+1. Use Node.js 24 or later and install dependencies:
 
    ```sh
    npm install
@@ -50,16 +50,23 @@ To use another server, create the tables from
 SENECA_TEST_PG_HOST=db.local SENECA_TEST_PG_PORT=5432 npm test
 ```
 
-## Test against the unreleased Seneca 4.0.0
+## Test against an unreleased Seneca build
 
 ```sh
-npm install --no-save /path/to/seneca-4.0.0.tgz
+npm install --no-save /path/to/seneca-4.x.y.tgz
 npm test
 npm install   # restore the devDependency
 ```
 
 ## Transaction tests
 
-The transaction tests run only when seneca-entity 21.x or 22.x is
-installed (the only releases with transaction support). With the
-default seneca-entity 28 they are reported as skipped.
+The transaction tests run only when `seneca-entity` 21.0.x is
+installed, the only release whose transaction API the store supports.
+`@seneca/entity`, the development dependency, has no transaction API,
+so by default they are reported as skipped. To run them:
+
+```sh
+npm install --no-save seneca-entity@21.0.2
+npm test
+npm install   # remove it again
+```

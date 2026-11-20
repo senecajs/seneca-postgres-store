@@ -44,7 +44,7 @@ reference describes, explanation discusses.
 | `password` / `pass` | option | [Options](reference/options.md) |
 | `fromColumnName` | option | [Options](reference/options.md), [Map column names](how-to/map-column-names.md) |
 | `toColumnName` | option | [Options](reference/options.md), [Map column names](how-to/map-column-names.md) |
-| `map` (seneca-entity store option) | option | [Options](reference/options.md) |
+| `map` (`@seneca/entity` store option) | option | [Options](reference/options.md) |
 | `SENECA_TEST_PG_*` | test env variables | [Run the tests locally](how-to/run-the-tests-locally.md) |
 | `role:entity,cmd:save` | action | [Messages](reference/messages.md) |
 | `role:entity,cmd:load` | action | [Messages](reference/messages.md) |

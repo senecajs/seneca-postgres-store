@@ -157,10 +157,9 @@ function postgres_store(options) {
   }
 
 
-  // Current seneca-entity exports the store init function; older
-  // versions (with Seneca 3) also decorated it as seneca.store.init.
-  const storeInit =
-    seneca.export('entity/init') || (seneca.store && seneca.store.init)
+  // The entity plugin (@seneca/entity) exports the store init function.
+  // Load it before this store.
+  const storeInit = seneca.export('entity/init')
   const meta = storeInit(seneca, options, store)
 
 
