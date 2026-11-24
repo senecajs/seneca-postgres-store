@@ -12,7 +12,7 @@ Connection options are passed to `pg.Pool`.
 | `password` | string | none | Password. `pass` is accepted when `password` is not set. |
 | `toColumnName` | function | identity | Maps an entity field name to a column name. |
 | `fromColumnName` | function | identity | Maps a column name to an entity field name. |
-| `map` | object | none | seneca-entity store option: which entity canons this store handles, for example `{ '-/-/foo': '*' }`. |
+| `map` | object | none | `@seneca/entity` store option: which entity canons this store handles, for example `{ '-/-/foo': '*' }`. |
 
 Notes, verified in `lib/intern.js` (`getConfig`):
 

@@ -1,3 +1,32 @@
+# Changes
+
+## 3.0.0 2026-11-20
+
+The first version published as `@seneca/postgres-store`; versions up to
+2.4.0 were published as `seneca-postgres-store`. 2.5.0 was prepared but
+not published; its changes are part of this version.
+
+* Seneca 4: the peer dependency is `seneca` `^4.0.0`. Seneca 3 users
+  stay on `seneca-postgres-store@2`.
+* Renamed from `seneca-postgres-store` to `@seneca/postgres-store`.
+* Node.js 24 or later (`engines.node` `>=24`).
+* New peer dependency `@seneca/entity` `^29.0.0`, the entity plugin for
+  Seneca 4. Load it before the store, by its full name. The store
+  registers through its `entity/init` export; the `seneca.store.init`
+  fallback for Seneca 3 is removed.
+* Generated ids come from `crypto.randomUUID()`, still a random UUID
+  v4. The runtime dependency on the deprecated `uuid` 9.0.0 is removed.
+* Transactions are unchanged and still need `seneca-entity` 21.0.x,
+  which works on Seneca 4 but is not a supported setup for this
+  release. `@seneca/entity` has no transaction API, so with it every
+  action runs outside a transaction (DEC-25).
+* Tests use `@seneca/entity` 29 and `@seneca/store-test` 7, loaded by
+  full name (B14). Removed the development dependencies
+  `seneca-entity`, `seneca-store-test` and `seneca-promisify` (D4).
+  The transaction tests run only when `seneca-entity` 21.0.x is
+  installed by hand.
+* `CHANGES.md` and `postgresql-store.js` are listed in `files`.
+
 ## 2.5.0 2026-10-08
 
 * Seneca 4 prerelease support (4.0.0-rc5 and 4.0.0): the store now uses

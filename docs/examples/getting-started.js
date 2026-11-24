@@ -6,7 +6,7 @@ const env = process.env
 
 const seneca = Seneca({ legacy: false })
   .test()
-  .use('entity', { mem_store: false })
+  .use('@seneca/entity', { mem_store: false })
   .use(require('../../postgresql-store.js'), {
     name: env.SENECA_TEST_PG_DATABASE || 'senecatest_71v94h',
     host: env.SENECA_TEST_PG_HOST || '127.0.0.1',

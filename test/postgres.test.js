@@ -6,10 +6,10 @@ const { expect } = require('@hapi/code')
 
 const PgStore = require('..')
 const DbConfig = require('./support/db/config')
-const Shared = require('seneca-store-test')
+const Shared = require('@seneca/store-test')
 
 const Async = require('async')
-const Uuid = require('uuid').v4
+const Uuid = require('crypto').randomUUID
 const Util = require('util')
 
 const POSTGRES_STORE_NAME = 'postgresql-store'
@@ -151,18 +151,29 @@ describe('seneca postgres plugin', () => {
     }))
   })
 
-  // Transactions need entity.begin/end/rollback/state, which only
-  // seneca-entity 21.x and 22.x provide. Skip when they are absent.
-  const entityHasTransactions =
-    /^2[12]\./.test(require('seneca-entity/package.json').version)
+  // Transactions need entity.begin/end/rollback/state with the
+  // transaction details in msg.details(), which only seneca-entity
+  // 21.0.x provides. @seneca/entity has no transaction API, so these
+  // tests run only after `npm install --no-save seneca-entity@21.0.2`.
+  const entityHasTransactions = (() => {
+    try {
+      return /^21\.0\./.test(require('seneca-entity/package.json').version)
+    } catch (_err) {
+      return false
+    }
+  })()
 
   describe('transaction', { skip: !entityHasTransactions }, function () {
     if (!entityHasTransactions) {
-      return it('requires seneca-entity 21.x or 22.x', { skip: true }, () => {})
+      return it('requires seneca-entity 21.0.x', { skip: true }, () => {})
     }
-    const si = makeSenecaForTest({entity_opts: { transaction: {active:true} }})
-    si.use('promisify')
-    
+    // Pass the module itself, so that the plugin is the version checked
+    // above, whatever Seneca's own name lookup would find.
+    const si = makeSenecaForTest({
+      entity: require('seneca-entity'),
+      entity_opts: { transaction: {active:true} }
+    })
+
     before(() => {
       return new Promise(done => {
         si.ready(done)
@@ -178,10 +189,10 @@ describe('seneca postgres plugin', () => {
       await s0.entity('foo').data$({p1:'t1'}).save$()
       let tx0 = await s0.entity.end()
 
-      expect(tx0).include({
-        handle: { name: 'postgres' },
-        result: { done: true },
-      })
+      // The handle also has an id, and a rollback result also has
+      // rollback: true, so compare the nested objects partially.
+      expect(tx0.handle).include({ name: 'postgres' })
+      expect(tx0.result).include({ done: true })
       // console.log(tx0)
       // console.dir(tx0.trace)
 
@@ -198,10 +209,10 @@ describe('seneca postgres plugin', () => {
 
       let tx0 = await s0.entity.rollback()
 
-      expect(tx0).include({
-        handle: { name: 'postgres' },
-        result: { done: false },
-      })
+      // The handle also has an id, and a rollback result also has
+      // rollback: true, so compare the nested objects partially.
+      expect(tx0.handle).include({ name: 'postgres' })
+      expect(tx0.result).include({ done: false })
       // console.log(tx0)
       // console.dir(tx0.trace)
 
@@ -962,9 +973,13 @@ describe('seneca postgres plugin', () => {
 function makeSenecaForTest(opts = {}) {
   const si = Seneca().test()
 
-  const { entity_opts = {}, postgres_opts = {} } = opts
-  
-  si.use('seneca-entity', {
+  const {
+    entity = '@seneca/entity',
+    entity_opts = {},
+    postgres_opts = {}
+  } = opts
+
+  si.use(entity, {
     mem_store: false,
     ...entity_opts
   })

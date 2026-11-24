@@ -1,9 +1,9 @@
 # @seneca/postgres-store
 
 A [Seneca](http://senecajs.org) entity store plugin for PostgreSQL,
-using the [pg](https://node-postgres.com/) driver. It works with
-Seneca 4 (tested with 4.0.0-rc5 and 4.0.0) and seneca-entity 28, on
-Node 24 and 22.
+using the [pg](https://node-postgres.com/) driver. It needs Seneca 4
+(`seneca` `^4.0.0`), the entity plugin `@seneca/entity` 29 and
+Node.js 24 or later. Seneca 3 users stay on `seneca-postgres-store@2`.
 
 [![npm version](https://img.shields.io/npm/v/@seneca/postgres-store.svg)](https://www.npmjs.com/package/@seneca/postgres-store)
 [![build](https://github.com/senecajs/seneca-postgres-store/actions/workflows/build.yml/badge.svg)](https://github.com/senecajs/seneca-postgres-store/actions/workflows/build.yml)
@@ -14,7 +14,7 @@ Node 24 and 22.
 ## Install
 
 ```sh
-npm install seneca seneca-entity @seneca/postgres-store
+npm install seneca@^4 @seneca/entity @seneca/postgres-store
 ```
 
 The store does not create tables; create them before use.
@@ -25,7 +25,7 @@ The store does not create tables; create them before use.
 const Seneca = require('seneca')
 
 const seneca = Seneca()
-  .use('entity', { mem_store: false })
+  .use('@seneca/entity', { mem_store: false })
   .use('@seneca/postgres-store', {
     name: 'mydb',
     host: '127.0.0.1',
@@ -73,7 +73,7 @@ The full list of features is the [documentation index](docs/README.md).
 
 ## Contributing
 
-The tests need PostgreSQL. With Docker and Node 24 or 22:
+The tests need PostgreSQL. With Docker and Node.js 24 or later:
 
 ```sh
 npm install
@@ -83,8 +83,8 @@ npm run services:down
 ```
 
 See [Run the tests locally](docs/how-to/run-the-tests-locally.md) for
-the `SENECA_TEST_PG_*` variables and testing with the unreleased
-Seneca 4.0.0. CI workflow changes are kept in `.patches/` (apply with
+the `SENECA_TEST_PG_*` variables and testing with an unreleased
+Seneca build. CI workflow changes are kept in `.patches/` (apply with
 `git am .patches/*.patch`).
 
 ## Background
@@ -92,9 +92,9 @@ Seneca 4.0.0. CI workflow changes are kept in `.patches/` (apply with
 Originally written by Marian Radulescu, maintained by the Seneca
 community. See [CHANGES.md](CHANGES.md).
 
-| Version | Seneca | seneca-entity | Node |
-| ------- | ------ | ------------- | ---- |
-| 2.5.x | 4 (prerelease and 4.0.0) | 28 | 22, 24 |
-| 2.4.x | 3 | 20 to 22 | older releases |
+| Version | Package | Seneca | Entity plugin | Node |
+| ------- | ------- | ------ | ------------- | ---- |
+| 3.x | `@seneca/postgres-store` | 4 | `@seneca/entity` 29 | 24 or later |
+| 2.4.x | `seneca-postgres-store` | 3 | `seneca-entity` 20 to 22 | older releases |
 
 License: MIT. See [LICENSE](LICENSE).
