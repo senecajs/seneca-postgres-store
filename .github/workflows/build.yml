@@ -1,20 +1,59 @@
 name: build
 
 on:
+  workflow_dispatch:
   push:
-    branches: [main]
+    branches: [master, main]
   pull_request:
-    branches: [main]
+    branches: [master, main]
+
+permissions:
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [24.x, 26.x]
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: senecatest
+          POSTGRES_PASSWORD: senecatest_2086hab80y
+          POSTGRES_DB: senecatest_71v94h
+        ports:
+          - 55432:5432
+        options: >-
+          --health-cmd "pg_isready -h 127.0.0.1 -U senecatest -d senecatest_71v94h"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    env:
+      SENECA_TEST_PG_HOST: 127.0.0.1
+      SENECA_TEST_PG_PORT: 55432
+      SENECA_TEST_PG_USER: senecatest
+      SENECA_TEST_PG_PASSWORD: senecatest_2086hab80y
+      SENECA_TEST_PG_DATABASE: senecatest_71v94h
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js 24
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '24'
+          node-version: ${{ matrix.node-version }}
+      - name: Create test schema
+        run: psql -v ON_ERROR_STOP=1 -f test/support/dbschema.sql
+        env:
+          PGHOST: 127.0.0.1
+          PGPORT: 55432
+          PGUSER: senecatest
+          PGPASSWORD: senecatest_2086hab80y
+          PGDATABASE: senecatest_71v94h
       - run: npm install
       - run: npm run build --if-present
       - run: npm test
